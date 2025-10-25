@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- Main Portfolio Page -->
+  <url>
+    <loc>https://TLimoges33.github.io/terminal-portfolio/</loc>
+    <lastmod>2025-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Deep Links to Popular Commands -->
+  <url>
+    <loc>https://TLimoges33.github.io/terminal-portfolio/#whoami</loc>
+    <lastmod>2025-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://TLimoges33.github.io/terminal-portfolio/#projects</loc>
+    <lastmod>2025-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://TLimoges33.github.io/terminal-portfolio/#experience</loc>
+    <lastmod>2025-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://TLimoges33.github.io/terminal-portfolio/#education</loc>
+    <lastmod>2025-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://TLimoges33.github.io/terminal-portfolio/#blog</loc>
+    <lastmod>2025-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <url>
+    <loc>https://TLimoges33.github.io/terminal-portfolio/#certs</loc>
+    <lastmod>2025-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <url>
+    <loc>https://TLimoges33.github.io/terminal-portfolio/#advisor</loc>
+    <lastmod>2025-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+</urlset>

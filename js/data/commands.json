@@ -1,0 +1,65 @@
+{
+  "help": {
+    "description": "Display all available commands"
+  },
+  "whoami": {
+    "description": "Show bio and professional summary"
+  },
+  "experience": {
+    "description": "View professional work history"
+  },
+  "education": {
+    "description": "View academic credentials and certifications"
+  },
+  "projects": {
+    "description": "List all active projects and research"
+  },
+  "alias": {
+    "description": "Create command shortcuts (alias name=command)"
+  },
+  "theme": {
+    "description": "Customize terminal appearance"
+  },
+  "apt": {
+    "description": "Package manager simulation (install/remove/list)"
+  },
+  "man": {
+    "description": "View manual pages with paging"
+  },
+  "hash": {
+    "description": "Calculate hash of string (WASM demo)"
+  },
+  "rot13": {
+    "description": "Apply ROT13 cipher (WASM demo)"
+  },
+  "synos": {
+    "description": "Technical deep-dive into Syn_OS project (try --demo, --memory, --syscalls)"
+  },
+  "skills": {
+    "description": "Technical skills and expertise breakdown"
+  },
+  "pursuits": {
+    "description": "Freelance work, bug bounties, and CTF competitions"
+  },
+  "blog": {
+    "description": "Published research and technical writing"
+  },
+  "certs": {
+    "description": "Certification roadmap and red team research"
+  },
+  "export": {
+    "description": "Download session transcript with command history"
+  },
+  "stats": {
+    "description": "View portfolio analytics and usage statistics"
+  },
+  "update": {
+    "description": "Reload portfolio with latest changes"
+  },
+  "clear": {
+    "description": "Clear the terminal screen"
+  },
+  "print": {
+    "description": "Print current terminal session"
+  }
+}

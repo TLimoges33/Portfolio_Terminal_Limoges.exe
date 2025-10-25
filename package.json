@@ -1,0 +1,37 @@
+{
+  "name": "tylerlimoges-terminal-portfolio",
+  "version": "6.0.0",
+  "description": "Interactive terminal portfolio for Tyler Limoges - Cybersecurity Professional",
+  "main": "js/main.js",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "lint": "eslint js/**/*.js",
+    "lint:fix": "eslint js/**/*.js --fix",
+    "serve": "python3 -m http.server 8000",
+    "build": "echo 'Static site - no build needed'",
+    "dev": "npm run serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TLimoges33/terminal-portfolio"
+  },
+  "keywords": [
+    "portfolio",
+    "cybersecurity",
+    "terminal",
+    "xterm.js",
+    "pwa"
+  ],
+  "author": "Tyler Limoges",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "jsdom": "^24.0.0",
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "@xenova/transformers": "^2.17.2"
+  }
+}

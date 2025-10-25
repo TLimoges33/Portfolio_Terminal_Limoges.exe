@@ -1,0 +1,34 @@
+:root {
+  --background: #101010;
+  --foreground: #f0f0f0;
+  --green: #39ff14;
+  --yellow: #f8d808;
+  --blue: #00bfff;
+  --red: #ff3131;
+  --purple: #d420ff;
+  --cyan: #00ffff;
+  --orange: #ffac1c;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: "Menlo", "Consolas", "monospace";
+  overflow: hidden; /* Prevent scrollbars */
+}
+
+#terminal {
+  height: 100vh;
+  width: 100vw;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.xterm .xterm-viewport {
+  background-color: var(--background);
+}

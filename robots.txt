@@ -1,0 +1,11 @@
+# robots.txt for Ty Limoges (DiabloRain) Portfolio
+# Allow all search engines to index the portfolio
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://TLimoges33.github.io/terminal-portfolio/sitemap.xml
+
+# Crawl-delay (be nice to bots)
+Crawl-delay: 1

@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Testing
+coverage/
+.vitest/
+
+# Build outputs
+dist/
+build/
+
+# Environment & Secrets
+.env
+.env.local
+.env*.local
+*.key
+*.pem
+secrets/
+credentials/
+config/secrets.json
+api-keys.txt
+
+# Admin & Private Documentation
+docs/ADMIN*.md
+docs/PRIVATE*.md
+docs/INTERNAL*.md
+docs/NOTES*.md
+admin/
+private/
+internal/
+
+# API Keys & Tokens
+*api-key*
+*api_key*
+*apikey*
+*.token
+*secret*
+huggingface-key.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

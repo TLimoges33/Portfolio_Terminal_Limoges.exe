@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Content Security Policy - Protect against XSS attacks -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com;
+      style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+      font-src 'self' data:;
+      img-src 'self' data: https:;
+      connect-src 'self' https://api-inference.huggingface.co https://www.google-analytics.com;
+      frame-ancestors 'none';
+      base-uri 'self';
+      form-action 'self';">
+    
+    <title>Tyler Limoges - Cybersecurity Portfolio</title>
+    <meta
+      name="description"
+      content="The professional portfolio and research repository of Tyler Limoges, a cybersecurity student specializing in Ethical AI Red Teaming and OPSEC."
+    />
+
+    <meta
+      property="og:title"
+      content="Tyler Limoges - Cybersecurity Portfolio"
+    />
+    <meta
+      property="og:description"
+      content="Interactive terminal portfolio of an aspiring Ethical AI Red Teamer with a background in critical infrastructure."
+    />
+    <meta property="og:image" content="assets/preview.svg" />
+    <meta
+      property="og:url"
+      content="https://TLimoges33.github.io/terminal-portfolio/"
+    />
+    <meta property="og:type" content="website" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#39FF14" />
+  </head>
+  <body>
+      </head>
+  <body>
+    <!-- Prerendered welcome for instant LCP -->
+    <noscript>
+      <div style="font-family: monospace; color: #F0F0F0; background: #101010; padding: 20px;">
+        <h1>Tyler Limoges - Cybersecurity Portfolio</h1>
+        <p>This interactive terminal portfolio requires JavaScript to function.</p>
+        <p>Please enable JavaScript to explore my projects, experience, and research.</p>
+      </div>
+    </noscript>
+    <div id="terminal" role="log" aria-live="polite" aria-label="Interactive terminal portfolio"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.min.js"></script>
+
+    <!-- Privacy-Friendly Analytics (Google Analytics 4) -->
+    <!-- Replace G-XXXXXXXXXX with your actual GA4 Measurement ID -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX', {
+        'anonymize_ip': true,
+        'cookie_flags': 'SameSite=None;Secure'
+      });
+      
+      // Track command usage (optional)
+      window.trackCommand = function(command) {
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'command_used', {
+            'event_category': 'terminal',
+            'event_label': command
+          });
+        }
+      };
+    </script> -->
+
+    <!-- AI Advisor -->
+    <script src="js/ai-advisor-simple.js"></script>
+
+    <script>
+      // Register service worker for PWA
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/sw.js")
+          .then((reg) => console.log("[SW] Registered", reg))
+          .catch((err) => console.log("[SW] Registration failed", err));
+      }
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
