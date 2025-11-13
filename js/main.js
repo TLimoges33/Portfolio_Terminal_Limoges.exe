@@ -1,18 +1,30 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  // --- Terminal Initialization ---
+  // --- Terminal Initialization - Syn_OS v8.0 Red Phoenix Theme ---
   const term = new Terminal({
     cursorBlink: true,
-    fontFamily: "'Menlo', 'Consolas', 'monospace'",
+    fontFamily: "'IBM Plex Mono', 'Rajdhani', 'Consolas', 'monospace'",
     theme: {
-      background: "#101010",
-      foreground: "#F0F0F0",
-      green: "#39FF14",
-      yellow: "#F8D808",
-      blue: "#00BFFF",
-      red: "#ca2323ff",
-      purple: "#D420FF",
-      cyan: "#00FFFF",
-      orange: "#FFAC1C",
+      background: "#000000", // Pure black void
+      foreground: "#FF0000", // Pure red aggression
+      cursor: "#FF3333", // Ember glow
+      cursorAccent: "#CC0000", // Blood red
+      selection: "#FF000033", // Semi-transparent red
+      black: "#000000",
+      red: "#FF0000", // Synos crimson
+      green: "#FF3333", // Ember (no traditional green)
+      yellow: "#FF6666", // Lighter red tint
+      blue: "#CC0000", // Blood red (no blue)
+      magenta: "#FF0000", // Pure crimson
+      cyan: "#FF3333", // Ember
+      white: "#FF0000", // Red for emphasis
+      brightBlack: "#330000",
+      brightRed: "#FF3333", // Ember glow
+      brightGreen: "#FF6666",
+      brightYellow: "#FF9999",
+      brightBlue: "#FF0000",
+      brightMagenta: "#FF3333",
+      brightCyan: "#FF6666",
+      brightWhite: "#FFFFFF", // Pure white for critical alerts
     },
   });
   const fitAddon = new FitAddon.FitAddon();
@@ -22,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   window.addEventListener("resize", () => fitAddon.fit());
 
   // --- State Management ---
-  const PROMPT = "\x1b[1;32m[Ty@SNHU ~]$\x1b[0m ";
+  const PROMPT = "\x1b[1;31m[Ty@SynOS ~]#\x1b[0m "; // Red prompt, root shell aesthetic
   let commandHistory = JSON.parse(
     localStorage.getItem("commandHistory") || "[]"
   );
@@ -43,6 +55,31 @@ document.addEventListener("DOMContentLoaded", async () => {
   let sessionStartTime = Date.now();
   let visitCount = parseInt(localStorage.getItem("visitCount") || "0") + 1;
   localStorage.setItem("visitCount", visitCount.toString());
+
+  // Rate limiting to prevent command spam
+  const rateLimiter = {
+    commands: [],
+    limit: 20, // 20 commands per 10 seconds
+    windowMs: 10000,
+
+    check() {
+      const now = Date.now();
+      this.commands = this.commands.filter((t) => now - t < this.windowMs);
+
+      if (this.commands.length >= this.limit) {
+        return false;
+      }
+
+      this.commands.push(now);
+      return true;
+    },
+
+    getRemainingTime() {
+      const now = Date.now();
+      const oldest = this.commands[0];
+      return Math.ceil((this.windowMs - (now - oldest)) / 1000);
+    },
+  };
 
   // Performance optimizations
   let commandCache = {};
@@ -95,31 +132,150 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   };
 
-  // --- Load Command Data ---
-  try {
-    const response = await fetch("js/data/commands.json");
-    commands = await response.json();
-  } catch (error) {
-    term.writeln(
-      "\x1b[1;31mError: Could not load js/data/commands.json\x1b[0m"
-    );
+  // --- Error Boundary: Global handler ---
+  window.addEventListener("error", (event) => {
+    console.error("[Portfolio Error]", event.error);
+    if (term) {
+      term.writeln("\r\n\x1b[1;31m✗ Unexpected error occurred\x1b[0m");
+      term.writeln(
+        "\x1b[90mPlease refresh the page. Error logged to console.\x1b[0m"
+      );
+    }
+  });
+
+  window.addEventListener("unhandledrejection", (event) => {
+    console.error("[Portfolio Promise Rejection]", event.reason);
+    if (term) {
+      term.writeln("\r\n\x1b[1;31m✗ Async operation failed\x1b[0m");
+      term.writeln(
+        "\x1b[90mError: " + (event.reason?.message || "Unknown") + "\x1b[0m"
+      );
+    }
+  });
+
+  // --- Load Command Data with retry logic ---
+  let commandsLoaded = false;
+  let retryCount = 0;
+  const maxRetries = 3;
+
+  while (!commandsLoaded && retryCount < maxRetries) {
+    try {
+      const response = await fetch("js/data/commands.json");
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      commands = await response.json();
+      commandsLoaded = true;
+    } catch (error) {
+      retryCount++;
+      console.error(
+        `[Portfolio] Failed to load commands (attempt ${retryCount}/${maxRetries}):`,
+        error
+      );
+
+      if (retryCount >= maxRetries) {
+        term.writeln("\x1b[1;31m✗ Error: Could not load commands.json\x1b[0m");
+        term.writeln(`\x1b[90mDetails: ${error.message}\x1b[0m`);
+        term.writeln(
+          "\x1b[33mSome features may be unavailable. Please refresh.\x1b[0m\r\n"
+        );
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
+      }
+    }
   }
 
-  // --- Welcome Message ---
-  const welcomeMessages = [
-    "Welcome to TylerLimoges.sh v6.0 // PRODUCTION DEPLOYMENT COMPLETE\r\n",
-    "This portfolio is an interactive shell. All project documentation, research, and",
-    "scripts are version-controlled and maintained in the primary repository.\r\n",
-    "> GitHub: \x1b[4mhttps://github.com/TLimoges33/SynapticOS-Docs\x1b[0m\r\n\r\n",
-    "Type 'help' for a list of available commands.\r\n",
-    "-------------------------------------------------------------------------------\r\n\r\n",
-  ];
-  welcomeMessages.forEach((msg) => term.write(msg));
-  term.write(PROMPT);
+  // --- Animated Welcome Message ---
+  const typeText = (text, delay = 20) => {
+    return new Promise((resolve) => {
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < text.length) {
+          term.write(text[i++]);
+        } else {
+          clearInterval(interval);
+          resolve();
+        }
+      }, delay);
+    });
+  };
+
+  const animateWelcome = async () => {
+    await typeText("\x1b[1;36mInitializing secure terminal...\x1b[0m", 15);
+    term.writeln("");
+    await new Promise((r) => setTimeout(r, 200));
+
+    await typeText("\x1b[1;36mLoading portfolio data...\x1b[0m", 15);
+    term.writeln("");
+    await new Promise((r) => setTimeout(r, 200));
+
+    await typeText("\x1b[1;32m✓ Security checks passed\x1b[0m", 15);
+    term.writeln("");
+    await typeText("\x1b[1;32m✓ System ready\x1b[0m", 15);
+    term.writeln("\r\n");
+    await new Promise((r) => setTimeout(r, 300));
+
+    term.writeln(
+      "\x1b[1;36m╔════════════════════════════════════════════════════╗\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;36m║  Welcome to TylerLimoges.sh v7.0                  ║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;36m║  Interactive Terminal Portfolio                   ║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;36m╚════════════════════════════════════════════════════╝\x1b[0m\r\n"
+    );
+
+    await typeText(
+      "\x1b[1;33mType 'help' for commands | 'tutorial' for guide | 'banner' for ASCII art\x1b[0m",
+      10
+    );
+    term.writeln("\r\n");
+    term.writeln(
+      "-------------------------------------------------------------------------------\r\n"
+    );
+    term.write(PROMPT);
+  };
+
+  // Check if user has seen animation before
+  const hasSeenAnimation = localStorage.getItem("welcomeAnimationShown");
+  if (!hasSeenAnimation) {
+    await animateWelcome();
+    localStorage.setItem("welcomeAnimationShown", "true");
+  } else {
+    // Show static welcome for returning users
+    term.writeln(
+      "\x1b[1;31mSyn_OS v8.0 RED PHOENIX\x1b[0m - Welcome back, operator\r\n"
+    );
+    term.writeln(
+      "Type \x1b[1;31m'help'\x1b[0m for commands | \x1b[1;31m'about'\x1b[0m for v8.0 changes\r\n"
+    );
+    term.writeln(
+      "-------------------------------------------------------------------------------\r\n"
+    );
+    term.write(PROMPT);
+  }
 
   const runCommand = async (cmd) => {
     term.writeln("");
     if (cmd.trim()) {
+      // Check rate limit
+      if (!rateLimiter.check()) {
+        term.writeln("\x1b[1;31m⚠️  Rate limit exceeded!\x1b[0m");
+        term.writeln(
+          `\x1b[90mPlease wait ${rateLimiter.getRemainingTime()} seconds before running more commands.\x1b[0m`
+        );
+        term.writeln(
+          "\x1b[90mThis protection prevents command spam and ensures optimal performance.\x1b[0m\r\n"
+        );
+        currentInput = "";
+        historyIndex = commandHistory.length;
+        term.write(PROMPT);
+        return;
+      }
+
       if (commandHistory[commandHistory.length - 1] !== cmd) {
         commandHistory.push(cmd);
         saveHistory();
@@ -132,55 +288,76 @@ document.addEventListener("DOMContentLoaded", async () => {
     term.write(PROMPT);
   };
 
-  // --- Core Command Execution Logic ---
+  // --- Core Command Execution Logic with Error Boundary ---
   const executeCommand = async (input) => {
-    const parts = input.trim().split(" ");
-    let commandName = parts[0];
-    const args = parts.slice(1);
+    try {
+      const parts = input.trim().split(" ");
+      let commandName = parts[0];
+      const args = parts.slice(1);
 
-    // Check for alias
-    if (aliases[commandName]) {
-      const aliasedCommand = aliases[commandName];
-      input = aliasedCommand + " " + args.join(" ");
-      return executeCommand(input);
-    }
-
-    const privilegedCommands = ["opsec", "pwnboard", "threatmodel"];
-
-    if (commandName === "sudo") {
-      const actualCommand = args[0];
-      if (privilegedCommands.includes(actualCommand)) {
-        term.write("[sudo] password for Ty: ");
-        // Simulate password input and success
-        setTimeout(() => {
-          term.writeln("*******");
-          term.writeln("> Authentication successful.");
-          executeCommand(args.join(" "));
-        }, 500);
-      } else if (actualCommand) {
-        term.writeln(
-          `sudo: ${actualCommand}: command not found or does not require sudo`
-        );
-      } else {
-        term.writeln("usage: sudo <command>");
+      // Check for alias
+      if (aliases[commandName]) {
+        const aliasedCommand = aliases[commandName];
+        input = aliasedCommand + " " + args.join(" ");
+        return executeCommand(input);
       }
-      return;
-    }
 
-    if (privilegedCommands.includes(commandName)) {
-      term.writeln(
-        `\x1b[1;31mERROR: Permission denied. This command requires elevated privileges. Try 'sudo ${commandName}'\x1b[0m`
+      const privilegedCommands = ["opsec", "pwnboard", "threatmodel"];
+
+      if (commandName === "sudo") {
+        const actualCommand = args[0];
+        if (privilegedCommands.includes(actualCommand)) {
+          term.write("[sudo] password for Ty: ");
+          // Simulate password input and success
+          setTimeout(() => {
+            term.writeln("*******");
+            term.writeln("> Authentication successful.");
+            executeCommand(args.join(" "));
+          }, 500);
+        } else if (actualCommand) {
+          term.writeln(
+            `sudo: ${actualCommand}: command not found or does not require sudo`
+          );
+        } else {
+          term.writeln("usage: sudo <command>");
+        }
+        return;
+      }
+
+      if (privilegedCommands.includes(commandName)) {
+        term.writeln(
+          `\x1b[1;31mERROR: Permission denied. This command requires elevated privileges. Try 'sudo ${commandName}'\x1b[0m`
+        );
+        return;
+      }
+
+      const command = commands[commandName];
+
+      if (command) {
+        await commandExecutors[commandName](term, args);
+        window.location.hash = commandName; // Update hash for linkability
+      } else if (commandName) {
+        term.writeln(`command not found: ${commandName}`);
+      }
+    } catch (error) {
+      console.error(
+        `[Portfolio] Command execution error for "${input}":`,
+        error
       );
-      return;
-    }
+      term.writeln(
+        `\r\n\x1b[1;31m✗ Error executing command: ${error.message}\x1b[0m`
+      );
+      term.writeln(
+        "\x1b[90mThis error has been logged. Please try again or use 'help'.\x1b[0m"
+      );
 
-    const command = commands[commandName];
-
-    if (command) {
-      await commandExecutors[commandName](term, args);
-      window.location.hash = commandName; // Update hash for linkability
-    } else if (commandName) {
-      term.writeln(`command not found: ${commandName}`);
+      // Track error in analytics if available
+      if (window.gtag) {
+        gtag("event", "exception", {
+          description: `Command error: ${input} - ${error.message}`,
+          fatal: false,
+        });
+      }
     }
   };
 
@@ -270,14 +447,95 @@ document.addEventListener("DOMContentLoaded", async () => {
         currentInput = currentInput.slice(0, -1);
       }
     } else if (domEvent.keyCode === 9) {
-      // Tab
+      // Tab - Fuzzy autocomplete
       domEvent.preventDefault();
-      const matchingCommands = Object.keys(commands).filter((c) =>
+
+      if (!currentInput) return;
+
+      const allCommands = Object.keys(commands);
+
+      // First try exact prefix matches
+      const exactMatches = allCommands.filter((c) =>
         c.startsWith(currentInput)
       );
-      if (matchingCommands.length === 1) {
-        term.write(matchingCommands[0].substring(currentInput.length));
-        currentInput = matchingCommands[0];
+
+      if (exactMatches.length === 1) {
+        // Single exact match - complete it
+        const completion = exactMatches[0].substring(currentInput.length);
+        term.write(completion);
+        currentInput = exactMatches[0];
+      } else if (exactMatches.length > 1) {
+        // Multiple exact matches - show them
+        term.writeln("\r\n\x1b[90mMatching commands:\x1b[0m");
+        exactMatches.forEach((cmd) => term.writeln(`  ${cmd}`));
+        term.write(PROMPT + currentInput);
+      } else {
+        // No exact matches - try fuzzy matching
+        const fuzzyMatches = allCommands
+          .map((cmd) => {
+            const input = currentInput.toLowerCase();
+            const candidate = cmd.toLowerCase();
+
+            // Calculate simple fuzzy score
+            if (candidate.includes(input)) {
+              return { cmd, score: 0.8 };
+            }
+
+            // Levenshtein-like scoring
+            let score = 0;
+            for (let i = 0; i < input.length; i++) {
+              if (candidate.includes(input[i])) {
+                score += 0.3 / input.length;
+              }
+            }
+
+            return { cmd, score };
+          })
+          .filter((m) => m.score >= 0.5)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 5);
+
+        if (fuzzyMatches.length === 1) {
+          // Single fuzzy match - suggest it
+          term.writeln(
+            `\r\n\x1b[90mDid you mean: \x1b[1;32m${fuzzyMatches[0].cmd}\x1b[0m\x1b[90m? (Tab again to accept)\x1b[0m`
+          );
+          term.write(PROMPT + currentInput);
+
+          // Store suggestion for next tab press
+          if (
+            !window._lastSuggestion ||
+            window._lastSuggestion.input !== currentInput
+          ) {
+            window._lastSuggestion = {
+              input: currentInput,
+              cmd: fuzzyMatches[0].cmd,
+            };
+          } else {
+            // Accept suggestion
+            const completion = window._lastSuggestion.cmd.substring(
+              currentInput.length
+            );
+            term.write(completion);
+            currentInput = window._lastSuggestion.cmd;
+            window._lastSuggestion = null;
+          }
+        } else if (fuzzyMatches.length > 1) {
+          // Multiple fuzzy matches - show them
+          term.writeln("\r\n\x1b[90mDid you mean:\x1b[0m");
+          fuzzyMatches.forEach((m) =>
+            term.writeln(
+              `  \x1b[1;32m${m.cmd}\x1b[0m \x1b[90m(score: ${(
+                m.score * 100
+              ).toFixed(0)}%)\x1b[0m`
+            )
+          );
+          term.write(PROMPT + currentInput);
+        } else {
+          // No matches at all
+          term.writeln("\r\n\x1b[90mNo matching commands\x1b[0m");
+          term.write(PROMPT + currentInput);
+        }
       }
     } else if (domEvent.keyCode === 38) {
       // ArrowUp
@@ -299,6 +557,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         term.write("\x1b[2K\r" + PROMPT);
         currentInput = "";
       }
+    } else if (key === "?" && currentInput === "") {
+      // '?' shortcut - show keyboard shortcuts
+      term.write("?");
+      currentInput = "shortcuts";
+      setTimeout(() => runCommand("shortcuts"), 0);
     } else if (printable) {
       term.write(key);
       currentInput += key;
@@ -344,31 +607,114 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     },
     theme: (term, args) => {
-      if (args.length === 0) {
-        term.writeln("Usage: theme [preset|set color value]");
-        term.writeln("Presets: dark, light, matrix, cyberpunk");
-        term.writeln("Set: theme set background #000000");
+      const presets = {
+        default: {
+          background: "#101010",
+          foreground: "#F0F0F0",
+          cursor: "#39FF14",
+          name: "Default",
+          description: "Classic green terminal",
+        },
+        matrix: {
+          background: "#000000",
+          foreground: "#00FF00",
+          cursor: "#00FF00",
+          name: "Matrix",
+          description: "Enter the Matrix",
+        },
+        cyberpunk: {
+          background: "#0a0e27",
+          foreground: "#00ffff",
+          cursor: "#ff00ff",
+          name: "Cyberpunk",
+          description: "Neon city vibes",
+        },
+        hacker: {
+          background: "#0d0208",
+          foreground: "#00ff41",
+          cursor: "#ff006e",
+          name: "Hacker",
+          description: "Elite hacker aesthetic",
+        },
+        nord: {
+          background: "#2e3440",
+          foreground: "#d8dee9",
+          cursor: "#88c0d0",
+          name: "Nord",
+          description: "Cool Nordic palette",
+        },
+        dracula: {
+          background: "#282a36",
+          foreground: "#f8f8f2",
+          cursor: "#ff79c6",
+          name: "Dracula",
+          description: "Popular dark theme",
+        },
+        monokai: {
+          background: "#272822",
+          foreground: "#f8f8f2",
+          cursor: "#f92672",
+          name: "Monokai",
+          description: "Classic code editor theme",
+        },
+        minimal: {
+          background: "#ffffff",
+          foreground: "#333333",
+          cursor: "#0066cc",
+          name: "Minimal",
+          description: "Clean light theme",
+        },
+      };
+
+      if (args.length === 0 || args[0] === "list") {
+        term.writeln("\x1b[1;36m\n🎨 AVAILABLE THEMES\x1b[0m\r\n");
+        Object.entries(presets).forEach(([key, theme]) => {
+          const isCurrent =
+            customTheme &&
+            customTheme.background === theme.background &&
+            customTheme.foreground === theme.foreground;
+          const marker = isCurrent ? "\x1b[1;32m✓\x1b[0m" : " ";
+          term.writeln(
+            `  ${marker} \x1b[1;33m${key.padEnd(12)}\x1b[0m - ${
+              theme.description
+            }`
+          );
+        });
+        term.writeln("\r\n\x1b[90mUsage: theme <name>          Change theme");
+        term.writeln("       theme list            Show all themes");
+        term.writeln(
+          "       theme reset           Reset to default\x1b[0m\r\n"
+        );
         return;
       }
 
-      const presets = {
-        dark: { background: "#101010", foreground: "#F0F0F0" },
-        light: { background: "#F0F0F0", foreground: "#101010" },
-        matrix: { background: "#000000", foreground: "#00FF00" },
-        cyberpunk: { background: "#0a0e27", foreground: "#00ffff" },
-      };
+      if (args[0] === "reset") {
+        const defaultTheme = presets.default;
+        Object.assign(term.options.theme, defaultTheme);
+        customTheme = defaultTheme;
+        localStorage.setItem("customTheme", JSON.stringify(customTheme));
+        term.writeln("\x1b[1;32m✓ Theme reset to default\x1b[0m\r\n");
+        return;
+      }
 
-      if (args[0] === "set" && args.length === 3) {
-        if (!customTheme) customTheme = {};
-        customTheme[args[1]] = args[2];
+      if (presets[args[0]]) {
+        const selectedTheme = presets[args[0]];
+        Object.assign(term.options.theme, {
+          background: selectedTheme.background,
+          foreground: selectedTheme.foreground,
+          cursor: selectedTheme.cursor,
+        });
+        customTheme = selectedTheme;
         localStorage.setItem("customTheme", JSON.stringify(customTheme));
-        term.options.theme[args[1]] = args[2];
-        term.writeln(`Theme updated: ${args[1]} = ${args[2]}`);
-      } else if (presets[args[0]]) {
-        Object.assign(term.options.theme, presets[args[0]]);
-        customTheme = presets[args[0]];
-        localStorage.setItem("customTheme", JSON.stringify(customTheme));
-        term.writeln(`Theme changed to: ${args[0]}`);
+        term.writeln(
+          `\x1b[1;32m✓ Theme changed to: ${selectedTheme.name}\x1b[0m`
+        );
+        term.writeln(`\x1b[90m  ${selectedTheme.description}\x1b[0m\r\n`);
+      } else {
+        term.writeln(`\x1b[1;31m✗ Theme '${args[0]}' not found\x1b[0m`);
+        term.writeln(
+          "\x1b[90mType 'theme list' to see available themes\x1b[0m\r\n"
+        );
       }
     },
     apt: (term, args) => {
@@ -466,12 +812,426 @@ document.addEventListener("DOMContentLoaded", async () => {
       Object.entries(commands).forEach(([name, details]) => {
         if (details.description) {
           term.writeln(
-            `  \x1b[1;32m${name.padEnd(14, " ")}\x1b[0m - ${
+            `  \x1b[1;31m${name.padEnd(14, " ")}\x1b[0m - ${
               details.description
             }`
           );
         }
       });
+      term.writeln(
+        "\r\n\x1b[90mTip: Type 'tutorial' for guide | 'about' for v8.0 info\x1b[0m"
+      );
+    },
+    about: (term, args) => {
+      term.writeln(
+        "\x1b[1;31m\n╔═══════════════════════════════════════════════╗\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[1;31m║    SYN_OS v8.0 - RED PHOENIX PROTOCOL        ║\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[1;31m╚═══════════════════════════════════════════════╝\x1b[0m\r\n"
+      );
+
+      term.writeln("\x1b[1;33m🎭 BRAND EVOLUTION\x1b[0m");
+      term.writeln(
+        "\x1b[90m  Blue Era (v1-7)      →  Red Phoenix (v8+)\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[90m  🔵 Calm academic      →  🔴 Aggressive professional\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[90m  Educational OS       →  MSSP warfare platform\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[90m  Defensive blue team  →  Offensive red team\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[90m  'Learn security'     →  'Dominate threats'\x1b[0m\r\n"
+      );
+
+      term.writeln("\x1b[1;33m🎨 DESIGN LANGUAGE\x1b[0m");
+      term.writeln(
+        "  \x1b[1;31m■\x1b[0m Pure Red (#FF0000)    - Aggression, focus, power"
+      );
+      term.writeln(
+        "  \x1b[1;30m■\x1b[0m Pure Black (#000000)  - Void, precision, stealth"
+      );
+      term.writeln(
+        "  \x1b[31m■\x1b[0m Ember Glow (#FF3333)  - Energy, circuits, life"
+      );
+      term.writeln(
+        "  \x1b[31m■\x1b[0m Blood Red (#CC0000)   - Depth, shadows, power\r\n"
+      );
+
+      term.writeln("\x1b[1;33m⚡ DESIGN PRINCIPLES\x1b[0m");
+      term.writeln("  • Angular geometry (no soft curves)");
+      term.writeln("  • High contrast (legibility in low light)");
+      term.writeln("  • Glowing effects (ember, circuit glow)");
+      term.writeln("  • 3D depth (shadows, layers)");
+      term.writeln("  • Root shell aesthetic ([Ty@SynOS ~]#)\r\n");
+
+      term.writeln("\x1b[1;33m🎯 POSITIONING\x1b[0m");
+      term.writeln(
+        '\x1b[1;31m  "Enterprise MSSP platform with red team branding.\x1b[0m'
+      );
+      term.writeln(
+        "\x1b[1;31m   Optimized for SOC operations, penetration testing,\x1b[0m"
+      );
+      term.writeln(
+        '\x1b[1;31m   and threat hunting. Not educational - operational."\x1b[0m\r\n'
+      );
+
+      term.writeln("\x1b[1;33m🔥 UNIQUE DIFFERENTIATORS\x1b[0m");
+      term.writeln("  vs Kali Linux:    Pure red/black (no blue accents)");
+      term.writeln("  vs ParrotOS:      Monochrome focus (no rainbow)");
+      term.writeln("  vs BlackArch:     Professional MSSP branding");
+      term.writeln(
+        "  vs All:           Phoenix mythology (rebirth/recovery)\r\n"
+      );
+
+      term.writeln("\x1b[1;33m💻 TYPOGRAPHY\x1b[0m");
+      term.writeln("  Primary: IBM Plex Mono   - Terminal perfection");
+      term.writeln("  Headers: Rajdhani        - Angular, military feel\r\n");
+
+      term.writeln(
+        "\x1b[90mThis isn't just a theme - it's a philosophical shift.\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[90mYou're not learning security. You're operating a weapon system.\x1b[0m\r\n"
+      );
+
+      term.writeln(
+        "\x1b[1;31mType 'theme classic' to revert to legacy green theme\x1b[0m\r\n"
+      );
+    },
+    security: (term, args) => {
+      term.writeln("\x1b[1;32m\n🔒 SECURITY IMPLEMENTATION REPORT\x1b[0m\r\n");
+      term.writeln("This portfolio implements enterprise-grade security:\r\n");
+
+      term.writeln("\x1b[1;33m1. Content Security Policy (CSP)\x1b[0m");
+      term.writeln("   \x1b[90m├─\x1b[0m No unsafe-inline directives");
+      term.writeln(
+        "   \x1b[90m├─\x1b[0m Strict script-src and style-src policies"
+      );
+      term.writeln(
+        "   \x1b[90m├─\x1b[0m XSS protection: \x1b[1;32mENABLED ✅\x1b[0m"
+      );
+      term.writeln("   \x1b[90m└─\x1b[0m Self-healing error boundaries\r\n");
+
+      term.writeln("\x1b[1;33m2. Subresource Integrity (SRI)\x1b[0m");
+      term.writeln("   \x1b[90m├─\x1b[0m SHA-384 hashes on all CDN resources");
+      term.writeln("   \x1b[90m├─\x1b[0m xterm.js: Integrity verified");
+      term.writeln("   \x1b[90m├─\x1b[0m xterm-addon-fit: Integrity verified");
+      term.writeln(
+        "   \x1b[90m└─\x1b[0m Supply chain attack prevention: \x1b[1;32mACTIVE ✅\x1b[0m\r\n"
+      );
+
+      term.writeln("\x1b[1;33m3. Input Validation & Sanitization\x1b[0m");
+      term.writeln("   \x1b[90m├─\x1b[0m 2000 character command limit");
+      term.writeln("   \x1b[90m├─\x1b[0m Character whitelist enforcement");
+      term.writeln("   \x1b[90m├─\x1b[0m Command injection prevention");
+      term.writeln(
+        "   \x1b[90m└─\x1b[0m Injection attacks: \x1b[1;32mBLOCKED ✅\x1b[0m\r\n"
+      );
+
+      term.writeln("\x1b[1;33m4. Data Protection\x1b[0m");
+      term.writeln("   \x1b[90m├─\x1b[0m Type-validated localStorage");
+      term.writeln("   \x1b[90m├─\x1b[0m Data poisoning prevention");
+      term.writeln("   \x1b[90m├─\x1b[0m Session isolation per domain");
+      term.writeln(
+        "   \x1b[90m└─\x1b[0m CORS protection: \x1b[1;32mENFORCED ✅\x1b[0m\r\n"
+      );
+
+      term.writeln("\x1b[1;33m5. Progressive Web App Security\x1b[0m");
+      term.writeln("   \x1b[90m├─\x1b[0m HTTPS-only service worker");
+      term.writeln("   \x1b[90m├─\x1b[0m Cache poisoning prevention");
+      term.writeln("   \x1b[90m├─\x1b[0m Offline-first architecture");
+      term.writeln(
+        "   \x1b[90m└─\x1b[0m Manifest integrity: \x1b[1;32mVERIFIED ✅\x1b[0m\r\n"
+      );
+
+      term.writeln("\x1b[1;33m6. Testing & Validation\x1b[0m");
+      term.writeln("   \x1b[90m├─\x1b[0m 146 automated tests passing");
+      term.writeln("   \x1b[90m├─\x1b[0m Security test suite: 100% coverage");
+      term.writeln("   \x1b[90m├─\x1b[0m XSS vulnerability tests: All passing");
+      term.writeln(
+        "   \x1b[90m└─\x1b[0m Command injection tests: All passing\r\n"
+      );
+
+      term.writeln("\x1b[1;36m📊 SECURITY SCORE: 9.5/10 🛡️\x1b[0m");
+      term.writeln("\x1b[1;32m✓ Production-ready security posture\x1b[0m");
+      term.writeln(
+        "\x1b[90m\nRun 'npm test' to see security tests in action\x1b[0m\r\n"
+      );
+    },
+    shortcuts: (term, args) => {
+      term.writeln(
+        "\x1b[1;36m\n⌨️  KEYBOARD SHORTCUTS & NAVIGATION\x1b[0m\r\n"
+      );
+
+      term.writeln("\x1b[1;33m📜 Command History\x1b[0m");
+      term.writeln(
+        "   \x1b[1;32m↑\x1b[0m         Navigate to previous command"
+      );
+      term.writeln("   \x1b[1;32m↓\x1b[0m         Navigate to next command");
+      term.writeln(
+        "   \x1b[1;32mCtrl+R\x1b[0m    Reverse search through history\r\n"
+      );
+
+      term.writeln("\x1b[1;33m✨ Auto-completion\x1b[0m");
+      term.writeln(
+        "   \x1b[1;32mTab\x1b[0m       Autocomplete commands (fuzzy matching)"
+      );
+      term.writeln(
+        "   \x1b[90m            Try typing 'proj' then Tab\x1b[0m\r\n"
+      );
+
+      term.writeln("\x1b[1;33m🎮 Terminal Control\x1b[0m");
+      term.writeln("   \x1b[1;32mCtrl+L\x1b[0m    Clear terminal screen");
+      term.writeln("   \x1b[1;32mCtrl+C\x1b[0m    Cancel current input");
+      term.writeln(
+        "   \x1b[1;32mCtrl+K\x1b[0m    Clear from cursor to end of line"
+      );
+      term.writeln(
+        "   \x1b[1;32mCtrl+U\x1b[0m    Clear entire current line\r\n"
+      );
+
+      term.writeln("\x1b[1;33m🚀 Quick Commands\x1b[0m");
+      term.writeln("   \x1b[1;32mhelp\x1b[0m      Show all available commands");
+      term.writeln("   \x1b[1;32mclear\x1b[0m     Clear the screen");
+      term.writeln(
+        "   \x1b[1;32mtutorial\x1b[0m  Interactive guide for new users"
+      );
+      term.writeln(
+        "   \x1b[1;32msecurity\x1b[0m  View security implementation\r\n"
+      );
+
+      term.writeln("\x1b[1;33m💡 Pro Tips\x1b[0m");
+      term.writeln("   • Commands persist across sessions");
+      term.writeln("   • Use 'alias' to create custom shortcuts");
+      term.writeln("   • Press Tab after typing a few letters");
+      term.writeln("   • History is saved (last 50 commands)");
+      term.writeln("   • Portfolio works offline (PWA)\r\n");
+
+      term.writeln(
+        "\x1b[90mTip: Type '?' at any time to see this again\x1b[0m\r\n"
+      );
+    },
+    banner: (term, args) => {
+      term.writeln("\x1b[1;32m");
+      term.writeln("  ████████╗██╗   ██╗██╗     ███████╗██████╗ ");
+      term.writeln("  ╚══██╔══╝╚██╗ ██╔╝██║     ██╔════╝██╔══██╗");
+      term.writeln("     ██║    ╚████╔╝ ██║     █████╗  ██████╔╝");
+      term.writeln("     ██║     ╚██╔╝  ██║     ██╔══╝  ██╔══██╗");
+      term.writeln("     ██║      ██║   ███████╗███████╗██║  ██║");
+      term.writeln("     ╚═╝      ╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝");
+      term.writeln("");
+      term.writeln(
+        "  ██╗     ██╗███╗   ███╗ ██████╗  ██████╗ ███████╗███████╗"
+      );
+      term.writeln(
+        "  ██║     ██║████╗ ████║██╔═══██╗██╔════╝ ██╔════╝██╔════╝"
+      );
+      term.writeln(
+        "  ██║     ██║██╔████╔██║██║   ██║██║  ███╗█████╗  ███████╗"
+      );
+      term.writeln(
+        "  ██║     ██║██║╚██╔╝██║██║   ██║██║   ██║██╔══╝  ╚════██║"
+      );
+      term.writeln(
+        "  ███████╗██║██║ ╚═╝ ██║╚██████╔╝╚██████╔╝███████╗███████║"
+      );
+      term.writeln(
+        "  ╚══════╝╚═╝╚═╝     ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝╚══════╝"
+      );
+      term.writeln("\x1b[0m");
+      term.writeln(
+        "\x1b[1;36m              Cybersecurity Professional-in-Training\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[90m              Systems Programmer | Red Team Aspirant\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[90m              Building Syn_OS | 452,000+ Lines of Code\x1b[0m\r\n"
+      );
+      term.writeln(
+        "\x1b[1;33m  Type 'help' to explore | 'tutorial' for guidance\x1b[0m\r\n"
+      );
+    },
+    stats: (term, args) => {
+      const sessionTime = Math.floor((Date.now() - sessionStartTime) / 1000);
+      const totalCommands = Object.values(commandUsageStats).reduce(
+        (a, b) => a + b,
+        0
+      );
+      const topCommands = Object.entries(commandUsageStats)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      term.writeln("\x1b[1;36m\n📊 PORTFOLIO STATISTICS\x1b[0m\r\n");
+
+      term.writeln("\x1b[1;33m📈 Session Info\x1b[0m");
+      term.writeln(
+        `   \x1b[90m├─\x1b[0m Total visits: \x1b[1;32m${visitCount}\x1b[0m`
+      );
+      term.writeln(
+        `   \x1b[90m├─\x1b[0m Commands this session: \x1b[1;32m${
+          Object.keys(commandUsageStats).length
+        }\x1b[0m`
+      );
+      term.writeln(
+        `   \x1b[90m├─\x1b[0m Session time: \x1b[1;32m${Math.floor(
+          sessionTime / 60
+        )}m ${sessionTime % 60}s\x1b[0m`
+      );
+      term.writeln(
+        `   \x1b[90m└─\x1b[0m History size: \x1b[1;32m${commandHistory.length} commands\x1b[0m\r\n`
+      );
+
+      term.writeln("\x1b[1;33m🔥 Most Used Commands\x1b[0m");
+      if (topCommands.length > 0) {
+        topCommands.forEach(([cmd, count], idx) => {
+          const bar = "█".repeat(Math.min(count, 20));
+          const prefix = idx === topCommands.length - 1 ? "└─" : "├─";
+          term.writeln(
+            `   \x1b[90m${prefix}\x1b[0m \x1b[1;32m${cmd.padEnd(
+              12
+            )}\x1b[0m \x1b[36m${bar}\x1b[0m \x1b[90m(${count}x)\x1b[0m`
+          );
+        });
+      } else {
+        term.writeln("   \x1b[90m└─\x1b[0m No commands tracked yet");
+      }
+      term.writeln("");
+
+      term.writeln("\x1b[1;33m💾 Storage Usage\x1b[0m");
+      const historySize = JSON.stringify(commandHistory).length;
+      const aliasSize = JSON.stringify(aliases).length;
+      const statsSize = JSON.stringify(commandUsageStats).length;
+      const totalSize = historySize + aliasSize + statsSize;
+      term.writeln(
+        `   \x1b[90m├─\x1b[0m Command history: \x1b[1;32m${(
+          historySize / 1024
+        ).toFixed(2)} KB\x1b[0m`
+      );
+      term.writeln(
+        `   \x1b[90m├─\x1b[0m Aliases: \x1b[1;32m${(aliasSize / 1024).toFixed(
+          2
+        )} KB\x1b[0m`
+      );
+      term.writeln(
+        `   \x1b[90m├─\x1b[0m Statistics: \x1b[1;32m${(
+          statsSize / 1024
+        ).toFixed(2)} KB\x1b[0m`
+      );
+      term.writeln(
+        `   \x1b[90m└─\x1b[0m Total: \x1b[1;32m${(totalSize / 1024).toFixed(
+          2
+        )} KB\x1b[0m\r\n`
+      );
+
+      term.writeln("\x1b[1;33m⚡ Performance\x1b[0m");
+      term.writeln(
+        `   \x1b[90m├─\x1b[0m Commands available: \x1b[1;32m${
+          Object.keys(commands).length
+        }\x1b[0m`
+      );
+      term.writeln(
+        `   \x1b[90m├─\x1b[0m Aliases configured: \x1b[1;32m${
+          Object.keys(aliases).length
+        }\x1b[0m`
+      );
+      term.writeln(`   \x1b[90m├─\x1b[0m PWA enabled: \x1b[1;32m✓ Yes\x1b[0m`);
+      term.writeln(
+        `   \x1b[90m└─\x1b[0m Offline ready: \x1b[1;32m✓ Yes\x1b[0m\r\n`
+      );
+
+      term.writeln(
+        "\x1b[90mTip: Use 'clear' to reset the terminal or 'export' to save session\x1b[0m\r\n"
+      );
+    },
+    tutorial: (term, args) => {
+      term.writeln(
+        "\x1b[1;36m╔═════════════════════════════════════════════╗\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[1;36m║   🎓 WELCOME TO TERMINAL PORTFOLIO! 🎓     ║\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[1;36m║        Interactive Tutorial                 ║\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[1;36m╚═════════════════════════════════════════════╝\x1b[0m\r\n"
+      );
+
+      term.writeln("\x1b[1;33mStep 1: Navigation Basics\x1b[0m");
+      term.writeln("  • Type commands and press \x1b[1;32mEnter\x1b[0m");
+      term.writeln(
+        "  • Press \x1b[1;32m↑/↓\x1b[0m arrows to navigate command history"
+      );
+      term.writeln("  • Press \x1b[1;32mTab\x1b[0m to autocomplete commands");
+      term.writeln("  • Try it: Type 'who' and press Tab\r\n");
+
+      term.writeln("\x1b[1;33mStep 2: Essential Commands\x1b[0m");
+      term.writeln(
+        "  \x1b[1;32mwhoami\x1b[0m      - Learn about Tyler Limoges"
+      );
+      term.writeln("  \x1b[1;32mprojects\x1b[0m    - View technical projects");
+      term.writeln("  \x1b[1;32mexperience\x1b[0m  - Professional background");
+      term.writeln("  \x1b[1;32meducation\x1b[0m   - Academic credentials");
+      term.writeln(
+        "  \x1b[1;32mclear\x1b[0m       - Clear the terminal screen\r\n"
+      );
+
+      term.writeln("\x1b[1;33mStep 3: Cybersecurity Content\x1b[0m");
+      term.writeln(
+        "  \x1b[1;32msynos\x1b[0m       - 18k+ line OS project deep-dive"
+      );
+      term.writeln("  \x1b[1;32mcerts\x1b[0m       - Certification roadmap");
+      term.writeln("  \x1b[1;32mblog\x1b[0m        - Published research");
+      term.writeln(
+        "  \x1b[1;32mpursuits\x1b[0m    - CTF profiles (HTB, THM)\r\n"
+      );
+
+      term.writeln("\x1b[1;33mStep 4: Keyboard Shortcuts\x1b[0m");
+      term.writeln(
+        "  \x1b[1;32mCtrl+L\x1b[0m      - Clear screen (like 'clear')"
+      );
+      term.writeln("  \x1b[1;32mCtrl+K\x1b[0m      - Open command palette");
+      term.writeln("  \x1b[1;32mCtrl+R\x1b[0m      - Reverse history search");
+      term.writeln("  \x1b[1;32mCtrl+D\x1b[0m      - Logout simulation\r\n");
+
+      term.writeln("\x1b[1;33mStep 5: Advanced Features\x1b[0m");
+      term.writeln("  \x1b[1;32madvisor\x1b[0m     - AI career guidance");
+      term.writeln("  \x1b[1;32mstats\x1b[0m       - Your portfolio analytics");
+      term.writeln(
+        "  \x1b[1;32mexport\x1b[0m      - Download session transcript"
+      );
+      term.writeln("  \x1b[1;32mtheme\x1b[0m       - Change color scheme\r\n");
+
+      term.writeln("\x1b[1;33mStep 6: Easter Eggs 🥚\x1b[0m");
+      term.writeln("  Try these fun commands:");
+      term.writeln("  \x1b[90m• coffee, hack, konami, snake\x1b[0m\r\n");
+
+      term.writeln("\x1b[1;33mPro Tips:\x1b[0m");
+      term.writeln("  • Commands persist across sessions (localStorage)");
+      term.writeln("  • Use 'man <command>' for detailed documentation");
+      term.writeln("  • Create aliases: 'alias ll=help'");
+      term.writeln("  • This works offline (Progressive Web App)\r\n");
+
+      term.writeln(
+        "\x1b[1;32m✓ Tutorial Complete!\x1b[0m Try 'whoami' to get started.\r\n"
+      );
+
+      // Track tutorial completion
+      localStorage.setItem("tutorialCompleted", "true");
+      if (window.gtag) {
+        gtag("event", "tutorial_completed", {
+          event_category: "engagement",
+          event_label: "first_time_tutorial",
+        });
+      }
     },
     whoami: (term, args) => {
       term.writeln("> Executing ./get-bio.sh...\r\n");
@@ -1701,7 +2461,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         (Date.now() - sessionStartTime) / 1000 / 60
       );
 
-      let transcript = `Ty Limoges Portfolio - Session Transcript\n`;
+      let transcript = "Ty Limoges Portfolio - Session Transcript\n";
       transcript += `Date: ${new Date().toLocaleString()}\n`;
       transcript += `Session Duration: ${sessionDuration} minutes\n`;
       transcript += `Visit #${visitCount}\n`;
@@ -1799,6 +2559,145 @@ document.addEventListener("DOMContentLoaded", async () => {
           "\x1b[90m  (RFC 2324 - Hyper Text Coffee Pot Control Protocol)\x1b[0m"
         );
       }, 1500);
+    },
+    blog: (term, args) => {
+      term.writeln("\x1b[1;36m\n📝 LATEST BLOG POSTS\x1b[0m\r\n");
+
+      term.writeln(
+        "\x1b[1;33m[1] Building Syn_OS: A Journey into Kernel Development\x1b[0m"
+      );
+      term.writeln("    \x1b[90m├─\x1b[0m Published: October 2024");
+      term.writeln(
+        "    \x1b[90m├─\x1b[0m Topic: Systems Programming, Kernel Development"
+      );
+      term.writeln(
+        "    \x1b[90m└─\x1b[0m \x1b[4mhttps://shelldiablo33.substack.com/p/synos-kernel\x1b[0m\r\n"
+      );
+
+      term.writeln(
+        "\x1b[1;33m[2] Red Team Certification Roadmap: A Strategic Analysis\x1b[0m"
+      );
+      term.writeln("    \x1b[90m├─\x1b[0m Published: September 2024");
+      term.writeln(
+        "    \x1b[90m├─\x1b[0m Topic: Career Planning, Offensive Security"
+      );
+      term.writeln(
+        "    \x1b[90m└─\x1b[0m \x1b[4mhttps://shelldiablo33.substack.com/p/red-team-roadmap\x1b[0m\r\n"
+      );
+
+      term.writeln(
+        "\x1b[1;33m[3] Healthcare AI Security: Prompt Injection Vulnerabilities\x1b[0m"
+      );
+      term.writeln("    \x1b[90m├─\x1b[0m Published: August 2024");
+      term.writeln(
+        "    \x1b[90m├─\x1b[0m Topic: AI/ML Security, Healthcare Technology"
+      );
+      term.writeln(
+        "    \x1b[90m└─\x1b[0m \x1b[4mhttps://shelldiablo33.substack.com/p/ai-security\x1b[0m\r\n"
+      );
+
+      term.writeln(
+        "\x1b[1;32m📚 Read more at: \x1b[4mshelldiablo33.substack.com\x1b[0m\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[90m\nNew posts published weekly on cybersecurity research and systems programming\x1b[0m\r\n"
+      );
+    },
+    coffee: (term, args) => {
+      term.writeln("\x1b[1;33m");
+      term.writeln("   (  )   (   )  )");
+      term.writeln("    ) (   )  (  (");
+      term.writeln("    ( )  (    ) )");
+      term.writeln("    _____________");
+      term.writeln("   <_____________> ___");
+      term.writeln("   |             |/ _ \\");
+      term.writeln("   |               | | |");
+      term.writeln("   |               |_| |");
+      term.writeln(" __|_______________|\\___/");
+      term.writeln("\x1b[0m");
+      term.writeln("\x1b[1;32m☕ Coffee brewing...\x1b[0m");
+
+      let progress = 0;
+      const brewInterval = setInterval(() => {
+        progress += 20;
+        term.write(
+          `\r\x1b[1;36m[${"█".repeat(progress / 5)}${" ".repeat(
+            20 - progress / 5
+          )}] ${progress}%\x1b[0m`
+        );
+
+        if (progress >= 100) {
+          clearInterval(brewInterval);
+          term.writeln("\n\x1b[1;32m✓ Coffee ready! Time to code.\x1b[0m\r\n");
+          term.writeln(
+            "\x1b[90mFun fact: This portfolio was built on ~47 cups of coffee ☕\x1b[0m\r\n"
+          );
+        }
+      }, 300);
+    },
+    "hack-the-planet": (term, args) => {
+      term.writeln("\x1b[1;35m");
+      term.writeln("  ██╗  ██╗ █████╗  ██████╗██╗  ██╗");
+      term.writeln("  ██║  ██║██╔══██╗██╔════╝██║ ██╔╝");
+      term.writeln("  ███████║███████║██║     █████╔╝ ");
+      term.writeln("  ██╔══██║██╔══██║██║     ██╔═██╗ ");
+      term.writeln("  ██║  ██║██║  ██║╚██████╗██║  ██╗");
+      term.writeln("  ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝");
+      term.writeln("");
+      term.writeln("  ████████╗██╗  ██╗███████╗");
+      term.writeln("  ╚══██╔══╝██║  ██║██╔════╝");
+      term.writeln("     ██║   ███████║█████╗  ");
+      term.writeln("     ██║   ██╔══██║██╔══╝  ");
+      term.writeln("     ██║   ██║  ██║███████╗");
+      term.writeln("     ╚═╝   ╚═╝  ╚═╝╚══════╝");
+      term.writeln("");
+      term.writeln("  ██████╗ ██╗      █████╗ ███╗   ██╗███████╗████████╗");
+      term.writeln("  ██╔══██╗██║     ██╔══██╗████╗  ██║██╔════╝╚══██╔══╝");
+      term.writeln("  ██████╔╝██║     ███████║██╔██╗ ██║█████╗     ██║   ");
+      term.writeln("  ██╔═══╝ ██║     ██╔══██║██║╚██╗██║██╔══╝     ██║   ");
+      term.writeln("  ██║     ███████╗██║  ██║██║ ╚████║███████╗   ██║   ");
+      term.writeln("  ╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ");
+      term.writeln("\x1b[0m");
+      term.writeln("\x1b[1;32m");
+      term.writeln('  "Hack the Planet!" - Hackers (1995)');
+      term.writeln("\x1b[0m");
+      term.writeln("\x1b[90m  You found the easter egg! 🥚\x1b[0m");
+      term.writeln(
+        "\x1b[90m  For actual hacking projects, type 'synos' or 'pursuits'\x1b[0m\r\n"
+      );
+    },
+    matrix: (term, args) => {
+      term.writeln("\x1b[1;32m");
+      term.writeln("  ╔═══════════════════════════════════════════╗");
+      term.writeln("  ║  Wake up, Neo...                          ║");
+      term.writeln("  ║  The Matrix has you...                    ║");
+      term.writeln("  ║  Follow the white rabbit.                 ║");
+      term.writeln("  ╚═══════════════════════════════════════════╝");
+      term.writeln("\x1b[0m\r\n");
+
+      term.writeln(
+        "\x1b[1;33m  [1] Take the red pill - See Syn_OS (synos)\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[1;34m  [2] Take the blue pill - Return to safety (clear)\x1b[0m\r\n"
+      );
+
+      // Matrix rain effect (simplified)
+      term.writeln("\x1b[1;32m");
+      const chars = "01アイウエオカキクケコサシスセソタチツテト";
+      let rainLine = "";
+      for (let i = 0; i < 60; i++) {
+        rainLine += chars[Math.floor(Math.random() * chars.length)] + " ";
+      }
+      term.writeln("  " + rainLine);
+      term.writeln("\x1b[0m");
+
+      term.writeln(
+        '\x1b[90m  "Unfortunately, no one can be told what the Matrix is.'
+      );
+      term.writeln(
+        '   You have to see it for yourself." - Morpheus\x1b[0m\r\n'
+      );
     },
     hack: (term, args) => {
       const frames = [

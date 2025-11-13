@@ -17,5 +17,6 @@ module.exports = {
   globals: {
     Terminal: "readonly",
     FitAddon: "readonly",
+    gtag: "readonly",
   },
 };

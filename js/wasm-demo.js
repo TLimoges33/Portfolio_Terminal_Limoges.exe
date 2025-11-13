@@ -12,13 +12,13 @@ const wasmModule = {
       hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32bit integer
     }
-    return Math.abs(hash).toString(16).padStart(8, "0");
+    return Math.abs(hash).toString(16).padStart(8, '0');
   },
 
   // ROT13 cipher (another simple example)
   rot13: (input) => {
     return input.replace(/[a-zA-Z]/g, (char) => {
-      const start = char <= "Z" ? 65 : 97;
+      const start = char <= 'Z' ? 65 : 97;
       return String.fromCharCode(
         start + ((char.charCodeAt(0) - start + 13) % 26)
       );
@@ -30,27 +30,27 @@ const wasmModule = {
 const wasmCommands = {
   hash: (term, args) => {
     if (args.length === 0) {
-      term.writeln("Usage: hash <string>");
+      term.writeln('Usage: hash <string>');
       return;
     }
-    const input = args.join(" ");
+    const input = args.join(' ');
     const result = wasmModule.hash(input);
     term.writeln(`\x1b[1;32m[WASM]\x1b[0m Hash: ${result}`);
   },
 
   rot13: (term, args) => {
     if (args.length === 0) {
-      term.writeln("Usage: rot13 <string>");
+      term.writeln('Usage: rot13 <string>');
       return;
     }
-    const input = args.join(" ");
+    const input = args.join(' ');
     const result = wasmModule.rot13(input);
     term.writeln(`\x1b[1;32m[WASM]\x1b[0m ROT13: ${result}`);
   },
 };
 
 // Export for use in main.js
-if (typeof module !== "undefined" && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = { wasmModule, wasmCommands };
 }
 

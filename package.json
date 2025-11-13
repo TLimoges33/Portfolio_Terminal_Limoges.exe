@@ -1,7 +1,7 @@
 {
-  "name": "tylerlimoges-terminal-portfolio",
-  "version": "6.0.0",
-  "description": "Interactive terminal portfolio for Tyler Limoges - Cybersecurity Professional",
+  "name": "synos-terminal-portfolio",
+  "version": "8.0.0",
+  "description": "Syn_OS v8.0 Red Phoenix - MSSP Warfare Platform by Tyler Limoges",
   "main": "js/main.js",
   "scripts": {
     "test": "vitest run",
@@ -10,12 +10,13 @@
     "lint": "eslint js/**/*.js",
     "lint:fix": "eslint js/**/*.js --fix",
     "serve": "python3 -m http.server 8000",
-    "build": "echo 'Static site - no build needed'",
-    "dev": "npm run serve"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TLimoges33/terminal-portfolio"
+    "url": "https://github.com/TLimoges33/Portfolio_Terminal_Limoges.exe"
   },
   "keywords": [
     "portfolio",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "eslint": "^8.57.0",
     "jsdom": "^24.0.0",
+    "vite": "^5.0.0",
     "vitest": "^1.6.0"
   },
   "dependencies": {

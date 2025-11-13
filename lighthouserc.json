@@ -1,0 +1,38 @@
+# Lighthouse CI Configuration
+# https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/configuration.md
+
+ci:
+  collect:
+    url:
+      - http://localhost:8000/
+    startServerCommand: 'npm run serve'
+    numberOfRuns: 3
+    settings:
+      preset: 'desktop'
+      
+  assert:
+    preset: 'lighthouse:recommended'
+    assertions:
+      # Performance thresholds
+      'first-contentful-paint': ['warn', { maxNumericValue: 2000 }]
+      'largest-contentful-paint': ['warn', { maxNumericValue: 2500 }]
+      'cumulative-layout-shift': ['warn', { maxNumericValue: 0.1 }]
+      'total-blocking-time': ['warn', { maxNumericValue: 300 }]
+      'speed-index': ['warn', { maxNumericValue: 3000 }]
+      
+      # Accessibility
+      'accessibility': ['error', { minScore: 0.95 }]
+      
+      # Best Practices
+      'best-practices': ['warn', { minScore: 0.90 }]
+      
+      # SEO
+      'seo': ['warn', { minScore: 0.90 }]
+      
+      # PWA
+      'pwa-cross-browser': 'off'
+      'pwa-page-transitions': 'off'
+      'pwa-each-page-has-url': 'off'
+      
+  upload:
+    target: 'temporary-public-storage'

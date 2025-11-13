@@ -3,9 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <!-- Content Security Policy - Protect against XSS attacks -->
-    <meta http-equiv="Content-Security-Policy" content="
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
       default-src 'self';
       script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com;
       style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
@@ -14,8 +16,9 @@
       connect-src 'self' https://api-inference.huggingface.co https://www.google-analytics.com;
       frame-ancestors 'none';
       base-uri 'self';
-      form-action 'self';">
-    
+      form-action 'self';"
+    />
+
     <title>Tyler Limoges - Cybersecurity Portfolio</title>
     <meta
       name="description"
@@ -47,17 +50,32 @@
     <meta name="theme-color" content="#39FF14" />
   </head>
   <body>
-      </head>
-  <body>
     <!-- Prerendered welcome for instant LCP -->
     <noscript>
-      <div style="font-family: monospace; color: #F0F0F0; background: #101010; padding: 20px;">
+      <div
+        style="
+          font-family: monospace;
+          color: #f0f0f0;
+          background: #101010;
+          padding: 20px;
+        "
+      >
         <h1>Tyler Limoges - Cybersecurity Portfolio</h1>
-        <p>This interactive terminal portfolio requires JavaScript to function.</p>
-        <p>Please enable JavaScript to explore my projects, experience, and research.</p>
+        <p>
+          This interactive terminal portfolio requires JavaScript to function.
+        </p>
+        <p>
+          Please enable JavaScript to explore my projects, experience, and
+          research.
+        </p>
       </div>
     </noscript>
-    <div id="terminal" role="log" aria-live="polite" aria-label="Interactive terminal portfolio"></div>
+    <div
+      id="terminal"
+      role="log"
+      aria-live="polite"
+      aria-label="Interactive terminal portfolio"
+    ></div>
 
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.min.js"></script>
@@ -84,6 +102,9 @@
         }
       };
     </script> -->
+
+    <!-- Web Vitals Performance Monitoring -->
+    <script src="js/web-vitals.js"></script>
 
     <!-- AI Advisor -->
     <script src="js/ai-advisor-simple.js"></script>

@@ -2,6 +2,24 @@
   "help": {
     "description": "Display all available commands"
   },
+  \"tutorial\": {
+    \"description\": \"Interactive guide for first-time users\"
+  },
+  \"about\": {
+    \"description\": \"About Syn_OS v8.0 Red Phoenix theme\"
+  },
+  \"security\": {
+    \"description\": \"View security implementation details\"
+  },
+  "shortcuts": {
+    "description": "Display keyboard shortcuts and tips"
+  },
+  "banner": {
+    "description": "Display ASCII art portfolio banner"
+  },
+  "stats": {
+    "description": "View session and usage statistics"
+  },
   "whoami": {
     "description": "Show bio and professional summary"
   },
@@ -42,7 +60,16 @@
     "description": "Freelance work, bug bounties, and CTF competitions"
   },
   "blog": {
-    "description": "Published research and technical writing"
+    "description": "View latest blog posts from Substack"
+  },
+  "coffee": {
+    "description": "Brew some coffee ☕"
+  },
+  "hack-the-planet": {
+    "description": "Easter egg - hack the planet!"
+  },
+  "matrix": {
+    "description": "Enter the Matrix"
   },
   "certs": {
     "description": "Certification roadmap and red team research"
