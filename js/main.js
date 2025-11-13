@@ -566,17 +566,36 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!skipBoot) await new Promise((r) => setTimeout(r, 200));
 
-    // Detailed desert landscape with cacti, tumbleweeds, mountains
+    // Expanded detailed desert landscape - Massive Mojave vista
     // Store landscape as lines for tumbleweed animation
     const landscapeLines = [
-      "\x1b[1;90m      ▲\x1b[0m                                                          \x1b[1;90m▲▲\x1b[0m",
-      "\x1b[1;90m     ▲▲▲\x1b[0m      \x1b[33m/|\\\x1b[0m                                            \x1b[1;90m▲▲▲▲\x1b[0m",
-      "\x1b[1;90m    ▲▲ ▲▲\x1b[0m    \x1b[33m/ | \\\x1b[0m                        \x1b[33m  /|\\\x1b[0m           \x1b[1;90m▲▲▲ ▲▲\x1b[0m",
-      "\x1b[90m   ▲▲▲ ▲▲▲\x1b[0m  \x1b[33m/  |  \\\x1b[0m                      \x1b[33m / | \\\x1b[0m        \x1b[90m▲▲▲▲▲ ▲▲\x1b[0m",
-      "\x1b[90m  ▲▲▲▲▲▲▲▲▲\x1b[0m \x1b[33m  |||  \x1b[0m      TUMBLEWEED         \x1b[33m/  |||  \\\x1b[0m     \x1b[90m▲▲▲▲▲▲▲▲▲▲\x1b[0m",
-      "\x1b[90m ▲▲▲▲▲▲▲▲▲▲▲\x1b[0m \x1b[33m  |||  \x1b[0m                   \x1b[33m   |||   \x1b[0m   \x1b[90m▲▲▲▲▲▲▲▲▲▲▲▲\x1b[0m",
-      "\x1b[33m               |||                         |||                  \x1b[0m",
-      "\x1b[33m_______________|||_________________________|||__________________\x1b[0m",
+      // Sky layer with birds/vultures
+      "\x1b[90m                                  v                                    v\x1b[0m",
+      "\x1b[90m              v                                        v                 \x1b[0m",
+      "",
+      // Distant mountain ranges (multiple layers for depth)
+      "\x1b[1;90m        ▲▲\x1b[0m                                                          \x1b[1;90m▲▲▲\x1b[0m",
+      "\x1b[1;90m       ▲▲▲▲\x1b[0m                                                        \x1b[1;90m▲▲▲▲▲\x1b[0m",
+      "\x1b[1;90m      ▲▲▲▲▲▲\x1b[0m         \x1b[90m▲▲\x1b[0m                                      \x1b[1;90m▲▲▲▲▲▲▲\x1b[0m",
+      "\x1b[90m     ▲▲▲▲▲▲▲▲\x1b[0m       \x1b[90m▲▲▲▲▲\x1b[0m                                  \x1b[90m▲▲▲▲▲▲▲▲▲\x1b[0m",
+      "\x1b[90m    ▲▲▲▲▲▲▲▲▲▲\x1b[0m     \x1b[90m▲▲▲▲▲▲▲\x1b[0m                              \x1b[90m▲▲▲▲▲▲▲▲▲▲▲\x1b[0m",
+      "\x1b[90m   ▲▲▲▲▲▲▲▲▲▲▲▲\x1b[0m   \x1b[90m▲▲▲▲▲▲▲▲▲\x1b[0m                          \x1b[90m▲▲▲▲▲▲▲▲▲▲▲▲▲\x1b[0m",
+      "",
+      // Large saguaro cacti (left side)
+      "\x1b[33m        /|\\\x1b[0m                                       \x1b[33m    /|\\\x1b[0m",
+      "\x1b[33m       / | \\\x1b[0m          \x1b[33m  ||\x1b[0m                         \x1b[33m   / | \\\x1b[0m",
+      "\x1b[33m      /  |  \\\x1b[0m         \x1b[33m  ||\x1b[0m                        \x1b[33m  /  |  \\\x1b[0m              \x1b[33m/|\\\x1b[0m",
+      "\x1b[33m        |||  \x1b[0m          \x1b[33m /||\\\x1b[0m                         \x1b[33m   |||  \x1b[0m             \x1b[33m/ | \\\x1b[0m",
+      "\x1b[33m        |||  \x1b[0m         \x1b[33m/ || \\\x1b[0m                          \x1b[33m  |||  \x1b[0m            \x1b[33m/  |  \\\x1b[0m",
+      "\x1b[33m        |||  \x1b[0m        \x1b[33m   ||  \x1b[0m     TUMBLEWEED             \x1b[33m  |||  \x1b[0m             \x1b[33m  |||  \x1b[0m",
+      "\x1b[33m        |||  \x1b[0m        \x1b[33m   ||  \x1b[0m                            \x1b[33m  |||  \x1b[0m             \x1b[33m  |||  \x1b[0m",
+      // Ground debris and rocks
+      "\x1b[90m  •     \x1b[33m|||  \x1b[90m    o   \x1b[33m  ||  \x1b[90m        °                    \x1b[33m  |||  \x1b[90m    •       °  \x1b[33m  |||  \x1b[0m",
+      "\x1b[90m      ∙  \x1b[33m|||  \x1b[90m      ∙ \x1b[33m  ||  \x1b[90m  •        ∙               ∙  \x1b[33m  |||  \x1b[90m  •    ∙      \x1b[33m  |||  \x1b[0m",
+      // Sandy dunes and desert floor
+      "\x1b[33m        |||          ||                               |||           |||  \x1b[0m",
+      "\x1b[33m  ∼∼∼   |||    ∼∼    ||   ∼∼∼∼       ∼∼∼      ∼∼∼    |||    ∼∼∼   |||  \x1b[0m",
+      "\x1b[33m_______███_________ ██ ___________ __________ _______ ███ ________ ███__\x1b[0m",
     ];
 
     // 3. Enhanced Weather System - Multiple states
@@ -594,43 +613,53 @@ document.addEventListener("DOMContentLoaded", async () => {
         : weatherConditions[0]; // Clear at night/dawn/dusk
 
     // 4. Tumbleweed drift animation with enhanced weather
-    const tumbleweedPositions = skipBoot ? [45] : [25, 30, 35, 40, 45];
+    const tumbleweedPositions = skipBoot ? [35] : [20, 25, 30, 35, 40, 45, 50];
 
     for (let frameIdx = 0; frameIdx < tumbleweedPositions.length; frameIdx++) {
       if (skipBoot && frameIdx > 0) break;
       const pos = tumbleweedPositions[frameIdx];
 
       // Clear and redraw landscape with tumbleweed
-      term.write("\x1b[8A"); // Move cursor up 8 lines
+      term.write(`\x1b[${landscapeLines.length}A`); // Move cursor up to redraw
 
       for (let i = 0; i < landscapeLines.length; i++) {
-        if (i === 4) {
-          // Tumbleweed line with dynamic weather
-          let line = landscapeLines[i].replace("TUMBLEWEED", " ".repeat(20));
+        if (i === 15) {
+          // Tumbleweed line (middle cactus line) with dynamic weather
+          let line = landscapeLines[i].replace("TUMBLEWEED", " ".repeat(10));
 
-          // Apply weather effects
+          // Apply weather effects - positioned near tumbleweed
           let weatherEffect = "      ";
           if (currentWeather === "dust_storm") {
             weatherEffect = "\x1b[90m∼∼∼∼∼∼\x1b[0m";
-          } else if (currentWeather === "dust_devil" && frameIdx === 2) {
+          } else if (currentWeather === "dust_devil" && frameIdx === 3) {
             weatherEffect = "\x1b[1;33m  ∽∿∽  \x1b[0m";
           } else if (currentWeather === "heat_shimmer" && frameIdx % 2 === 0) {
             weatherEffect = "\x1b[90m ∼ ∼ ∼\x1b[0m";
-          } else if (Math.random() > 0.6) {
+          } else if (Math.random() > 0.7) {
             weatherEffect = "\x1b[90m.·˙˙·.\x1b[0m";
           }
 
+          // Insert tumbleweed at position
           line =
             line.substring(0, pos) +
             "\x1b[1;30m◐\x1b[0m" +
             line.substring(pos + 1);
-          line = line.substring(0, 60) + weatherEffect + line.substring(66);
+
+          // Add weather effect slightly ahead of tumbleweed
+          const weatherPos = pos + 8;
+          if (weatherPos < line.length - 10) {
+            line =
+              line.substring(0, weatherPos) +
+              weatherEffect +
+              line.substring(weatherPos + 6);
+          }
+
           term.writeln(line);
         } else {
           term.writeln(landscapeLines[i]);
         }
       }
-      if (!skipBoot) await new Promise((r) => setTimeout(r, 200));
+      if (!skipBoot) await new Promise((r) => setTimeout(r, 150));
     }
 
     // Weather status message
@@ -729,27 +758,48 @@ document.addEventListener("DOMContentLoaded", async () => {
     await animateWelcome();
     localStorage.setItem("welcomeAnimationShown", "true");
   } else {
-    // Show static welcome for returning users - Wastelands theme
+    // Show static welcome for returning users - Expanded Wastelands theme
     term.writeln(
       "\x1b[1;33m═══════════════════════════════════════════════════════════════════════════\x1b[0m"
     );
     term.writeln("");
     term.writeln(
-      "\x1b[1;31m    WASTELANDS LINUX\x1b[0m - \x1b[90mPublic Beta Build 2299\x1b[0m"
+      "\x1b[1;31m               WASTELANDS LINUX\x1b[0m - \x1b[90mPublic Beta Build 2299\x1b[0m"
     );
-    term.writeln("\x1b[90m    Welcome back to the Mojave, Courier.\x1b[0m");
+    term.writeln(
+      "\x1b[90m                 Welcome back to the Mojave, Courier.\x1b[0m"
+    );
     term.writeln("");
     term.writeln(
-      "\x1b[90m         ▲▲▲\x1b[0m       \x1b[33m/|\\\x1b[0m                    \x1b[1;33m☀\x1b[0m"
+      "\x1b[1;33m                      .------.\x1b[0m                    \x1b[90m v\x1b[0m"
     );
-    term.writeln("\x1b[90m        ▲▲▲▲▲\x1b[0m     \x1b[33m/ | \\\x1b[0m");
+    term.writeln("\x1b[1;33m                     /   ☀   \\\x1b[0m");
     term.writeln(
-      "\x1b[90m       ▲▲▲▲▲▲▲\x1b[0m    \x1b[33m  |||  \x1b[0m          \x1b[1;30m◐\x1b[0m"
+      "\x1b[1;33m                     \\       /\x1b[0m              \x1b[90m v\x1b[0m"
     );
-    term.writeln("\x1b[33m                   |||___________________\x1b[0m");
+    term.writeln("\x1b[1;33m                      '------'\x1b[0m");
     term.writeln("");
     term.writeln(
-      "    Type \x1b[1;31m'help'\x1b[0m for commands | \x1b[1;31m'about'\x1b[0m for system info\r\n"
+      "\x1b[1;90m          ▲▲▲▲\x1b[0m                                        \x1b[1;90m▲▲▲\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[90m         ▲▲▲▲▲▲\x1b[0m          \x1b[33m/|\\\x1b[0m                        \x1b[90m▲▲▲▲▲\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[90m        ▲▲▲▲▲▲▲▲\x1b[0m        \x1b[33m/ | \\\x1b[0m                      \x1b[90m▲▲▲▲▲▲▲\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[90m       ▲▲▲▲▲▲▲▲▲▲\x1b[0m      \x1b[33m/  |  \\\x1b[0m                   \x1b[90m▲▲▲▲▲▲▲▲▲\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[90m  •      \x1b[33m          |||  \x1b[0m        \x1b[1;30m◐\x1b[0m                  \x1b[33m  |||  \x1b[0m     \x1b[90m •\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[33m  ∼∼∼∼∼  _____ ███ ________ __________ _______ ███ _______  ∼∼∼∼\x1b[0m"
+    );
+    term.writeln("");
+    term.writeln(
+      "         Type \x1b[1;31m'help'\x1b[0m for commands | \x1b[1;31m'about'\x1b[0m for system info\r\n"
     );
     term.writeln(
       "\x1b[1;33m═══════════════════════════════════════════════════════════════════════════\x1b[0m\r\n"
