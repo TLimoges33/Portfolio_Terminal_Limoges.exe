@@ -5,25 +5,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     fontFamily: "'IBM Plex Mono', 'Rajdhani', 'Consolas', 'monospace'",
     theme: {
       background: "#000000", // Pure black void
-      foreground: "#FF0000", // Pure red aggression
-      cursor: "#FF3333", // Ember glow
-      cursorAccent: "#CC0000", // Blood red
+      foreground: "#FF0000", // True red - only red
+      cursor: "#CC6600", // Dark amber accent
+      cursorAccent: "#CC6600", // Dark amber
       selection: "#FF000033", // Semi-transparent red
       black: "#000000",
-      red: "#FF0000", // Synos crimson
-      green: "#FF3333", // Ember (no traditional green)
-      yellow: "#FF6666", // Lighter red tint
-      blue: "#CC0000", // Blood red (no blue)
-      magenta: "#FF0000", // Pure crimson
-      cyan: "#FF3333", // Ember
-      white: "#FF0000", // Red for emphasis
+      red: "#FF0000", // True red
+      green: "#FF0000", // True red (no green)
+      yellow: "#CC6600", // Dark amber
+      blue: "#FF0000", // True red (no blue)
+      magenta: "#FF0000", // True red
+      cyan: "#CC6600", // Dark amber
+      white: "#FF0000", // True red
       brightBlack: "#330000",
-      brightRed: "#FF3333", // Ember glow
-      brightGreen: "#FF6666",
-      brightYellow: "#FF9999",
-      brightBlue: "#FF0000",
-      brightMagenta: "#FF3333",
-      brightCyan: "#FF6666",
+      brightRed: "#FF0000", // True red
+      brightGreen: "#FF0000", // True red
+      brightYellow: "#CC6600", // Dark amber
+      brightBlue: "#FF0000", // True red
+      brightMagenta: "#FF0000", // True red
+      brightCyan: "#CC6600", // Dark amber
       brightWhite: "#FFFFFF", // Pure white for critical alerts
     },
   });
@@ -186,55 +186,539 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // --- Animated Welcome Message ---
+  // 1. Web Audio API for retro terminal sounds
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  let skipBoot = false;
+
+  const playBeep = (frequency = 800, duration = 50) => {
+    try {
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = frequency;
+      oscillator.type = "square";
+
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(
+        0.01,
+        audioContext.currentTime + duration / 1000
+      );
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + duration / 1000);
+    } catch (e) {
+      // Audio not supported, silently continue
+    }
+  };
+
+  const playGeigerClick = () => {
+    try {
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = 3000;
+      oscillator.type = "square";
+
+      gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(
+        0.01,
+        audioContext.currentTime + 0.02
+      );
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.02);
+    } catch (e) {
+      // Audio not supported, silently continue
+    }
+  };
+
+  // Bonus: Skip boot with ESC or SPACE
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" || e.key === " ") {
+      skipBoot = true;
+    }
+  });
+
   const typeText = (text, delay = 20) => {
     return new Promise((resolve) => {
       let i = 0;
       const interval = setInterval(() => {
-        if (i < text.length) {
-          term.write(text[i++]);
-        } else {
+        if (skipBoot || i >= text.length) {
           clearInterval(interval);
+          if (skipBoot && i < text.length) {
+            term.write(text.substring(i)); // Write remaining text instantly
+          }
           resolve();
+          return;
         }
+        term.write(text[i++]);
       }, delay);
     });
   };
 
+  // 5. Dynamic time-of-day system
+  const getTimeOfDay = () => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 8) return "dawn";
+    if (hour >= 8 && hour < 18) return "day";
+    if (hour >= 18 && hour < 20) return "dusk";
+    return "night";
+  };
+
+  // 4. Vault-Tec HUD status bar
+  const drawHUD = (stage = "BOOT", sysPercent = 0, memKB = 0, rad = 0.0) => {
+    const now = new Date();
+    const time = now.toLocaleTimeString("en-US", { hour12: false });
+    const date = `${(now.getMonth() + 1).toString().padStart(2, "0")}.${now
+      .getDate()
+      .toString()
+      .padStart(2, "0")}.2299`;
+
+    return `\x1b[90m[\x1b[1;33m${stage}\x1b[0m\x1b[90m] \x1b[1;32m${sysPercent}%\x1b[0m \x1b[90m[MEM] \x1b[1;36m${memKB}KB\x1b[0m \x1b[90m[RAD] \x1b[1;${
+      rad > 2 ? "33" : "32"
+    }m${rad.toFixed(1)}\x1b[0m \x1b[90m[${time}] [${date}]\x1b[0m`;
+  };
+
   const animateWelcome = async () => {
-    await typeText("\x1b[1;36mInitializing secure terminal...\x1b[0m", 15);
-    term.writeln("");
-    await new Promise((r) => setTimeout(r, 200));
+    // WASTELANDS BOOT SEQUENCE - Fallout New Vegas inspired
 
-    await typeText("\x1b[1;36mLoading portfolio data...\x1b[0m", 15);
+    // 5. Lucky 33 Casino Boot Logo
+    term.writeln(
+      "\x1b[1;33m╔═══════════════════════════════════════════════════════════════════════════╗\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                                                                           \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                 \x1b[1;31m██╗     ██╗   ██╗ ██████╗██╗  ██╗██╗   ██╗\x1b[0m               \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                 \x1b[1;31m██║     ██║   ██║██╔════╝██║ ██╔╝╚██╗ ██╔╝\x1b[0m               \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                 \x1b[1;31m██║     ██║   ██║██║     █████╔╝  ╚████╔╝\x1b[0m                \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                 \x1b[1;31m██║     ██║   ██║██║     ██╔═██╗   ╚██╔╝\x1b[0m                 \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                 \x1b[1;31m███████╗╚██████╔╝╚██████╗██║  ██╗   ██║\x1b[0m                  \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                 \x1b[1;31m╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝   ╚═╝\x1b[0m                  \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                                                                           \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                         \x1b[1;33m╔═══════════════════╗\x1b[0m                          \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                         \x1b[1;33m║\x1b[0m    \x1b[1;31m33 CASINO\x1b[0m      \x1b[1;33m║\x1b[0m                          \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                         \x1b[1;33m╚═══════════════════╝\x1b[0m                          \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                                                                           \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                    \x1b[90mRobCo Industries Unified Operating System\x1b[0m          \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                         \x1b[90mCopyright 2077-2299 (C) RobCo\x1b[0m                   \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                                                                           \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m╚═══════════════════════════════════════════════════════════════════════════╝\x1b[0m"
+    );
     term.writeln("");
-    await new Promise((r) => setTimeout(r, 200));
-
-    await typeText("\x1b[1;32m✓ Security checks passed\x1b[0m", 15);
+    term.writeln(
+      "\x1b[90m                    [Press ESC or SPACE to skip boot sequence]\x1b[0m"
+    );
     term.writeln("");
-    await typeText("\x1b[1;32m✓ System ready\x1b[0m", 15);
-    term.writeln("\r\n");
-    await new Promise((r) => setTimeout(r, 300));
+    if (!skipBoot) await new Promise((r) => setTimeout(r, 800));
 
-    term.writeln(
-      "\x1b[1;36m╔════════════════════════════════════════════════════╗\x1b[0m"
-    );
-    term.writeln(
-      "\x1b[1;36m║  Welcome to TylerLimoges.sh v7.0                  ║\x1b[0m"
-    );
-    term.writeln(
-      "\x1b[1;36m║  Interactive Terminal Portfolio                   ║\x1b[0m"
-    );
-    term.writeln(
-      "\x1b[1;36m╚════════════════════════════════════════════════════╝\x1b[0m\r\n"
-    );
+    // HUD Display
+    term.writeln(drawHUD("INIT", 0, 0, 0.0));
+    term.writeln("");
+
+    // Initial BIOS-style boot messages
+    playBeep(1000, 100);
+    await typeText("\x1b[1;33m[BIOS v2.51] Wastelands Linux Distro\x1b[0m", 8);
+    term.writeln("");
+    if (!skipBoot) await new Promise((r) => setTimeout(r, 150));
+
+    await typeText("\x1b[90mDetecting hardware... \x1b[0m", 8);
+    if (!skipBoot) await new Promise((r) => setTimeout(r, 300));
+    playBeep(800, 50);
+    term.writeln("\x1b[1;32m[OK]\x1b[0m");
 
     await typeText(
-      "\x1b[1;33mType 'help' for commands | 'tutorial' for guide | 'banner' for ASCII art\x1b[0m",
+      "\x1b[90mInitializing Vault-Tec Unified Operating System... \x1b[0m",
+      8
+    );
+    if (!skipBoot) await new Promise((r) => setTimeout(r, 300));
+    playBeep(800, 50);
+    term.writeln("\x1b[1;32m[OK]\x1b[0m");
+
+    // 2. POST Memory Check with Progressive Corruption & Recovery
+    term.writeln("");
+    term.write("\x1b[2A"); // Move up to update HUD
+    term.write("\r" + drawHUD("POST", 10, 0, 0.0));
+    term.write("\x1b[2B\r"); // Move back down
+
+    await typeText("\x1b[90mPerforming POST (Power-On Self-Test)...\x1b[0m", 8);
+    term.writeln("");
+    if (!skipBoot) await new Promise((r) => setTimeout(r, 100));
+
+    // Memory addresses with progressive corruption that recovers
+    const memAddresses = [
+      "0x0000F000",
+      "0x0001F000",
+      "0x0002F000",
+      "0x0003F000",
+      "0x0004F000",
+      "0x0005F000",
+      "0x0006F000",
+      "0x0007F000",
+    ];
+
+    for (let i = 0; i < memAddresses.length; i++) {
+      const addr = memAddresses[i];
+      playBeep(600 + i * 50, 30);
+
+      // Progressive corruption stages - gets worse in middle, then recovers
+      const corruptionLevel = i < 4 ? i : 7 - i; // 0,1,2,3,3,2,1,0
+      const corruptionStages = ["", "░", "▒░", "▓▒░", "█▓▒░"];
+
+      if (corruptionLevel > 0 && !skipBoot) {
+        term.write(`\x1b[90mChecking ${addr}... \x1b[0m`);
+
+        // Show progressive corruption
+        for (let stage = corruptionLevel; stage > 0; stage--) {
+          if (skipBoot) break;
+          term.write(`\x1b[1;31m${corruptionStages[stage]}\x1b[0m`);
+          await new Promise((r) => setTimeout(r, 40));
+          term.write(
+            "\b".repeat(stage) + " ".repeat(stage) + "\b".repeat(stage)
+          );
+          await new Promise((r) => setTimeout(r, 20));
+        }
+      }
+
+      term.writeln(`\x1b[90mChecking ${addr}... \x1b[1;32m[OK]\x1b[0m`);
+
+      // Update HUD mem
+      const memSoFar = 4096 * (i + 1);
+      term.write("\x1b[" + (i + 5) + "A"); // Move up
+      term.write("\r" + drawHUD("POST", 10 + i * 10, memSoFar, 0.0));
+      term.write("\x1b[" + (i + 5) + "B\r"); // Move back
+
+      if (!skipBoot) await new Promise((r) => setTimeout(r, 40));
+    }
+
+    playBeep(1200, 80);
+    term.writeln("\x1b[1;32m✓ Memory Test Complete: 32768 KB OK\x1b[0m");
+    if (!skipBoot) await new Promise((r) => setTimeout(r, 200));
+
+    // 1. Radiation Counter Animation with Geiger clicks
+    term.writeln("");
+    await typeText("\x1b[90mInitializing Geiger Counter... \x1b[0m", 8);
+    term.writeln("");
+
+    const radLevels = [0.5, 1.2, 2.8, 4.5, 3.1, 1.8, 0.3, 0.0];
+    for (let i = 0; i < radLevels.length; i++) {
+      if (skipBoot && i > 2) break;
+      const rad = radLevels[i];
+
+      // Click faster when radiation is higher
+      if (rad > 2 && !skipBoot) {
+        for (let j = 0; j < 3; j++) {
+          playGeigerClick();
+          await new Promise((r) => setTimeout(r, 80 / (rad + 1)));
+        }
+      } else if (!skipBoot) {
+        playGeigerClick();
+      }
+
+      term.write(
+        `\r\x1b[90mRadiation Level: \x1b[${
+          rad > 2 ? "1;33" : "1;32"
+        }m${rad.toFixed(1)} mSv/hr\x1b[0m`
+      );
+
+      // Update HUD
+      term.write("\x1b[16A");
+      term.write("\r" + drawHUD("RAD", 90, 32768, rad));
+      term.write("\x1b[16B\r");
+
+      if (!skipBoot) await new Promise((r) => setTimeout(r, 80));
+    }
+    playBeep(1000, 100);
+    term.writeln(
+      "\r\x1b[1;32m✓ Radiation Level: 0.0 mSv/hr [SAFE]\x1b[0m                "
+    );
+
+    // Final HUD update
+    term.write("\x1b[17A");
+    term.write("\r" + drawHUD("BOOT", 100, 32768, 0.0));
+    term.write("\x1b[17B\r");
+
+    if (!skipBoot) await new Promise((r) => setTimeout(r, 200));
+
+    term.writeln("\x1b[90mLoading Mojave Wasteland Kernel 5.76.2299\x1b[0m");
+    if (!skipBoot) await new Promise((r) => setTimeout(r, 200));
+    term.writeln("");
+
+    // Animated desert landscape - Vector ASCII art style
+    term.writeln(
+      "\x1b[1;33m╔═══════════════════════════════════════════════════════════════════════════╗\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;33m║\x1b[0m                     \x1b[1;31mWASTELANDS LINUX - Public Beta\x1b[0m                    \x1b[1;33m║\x1b[0m"
+    );
+    term.writeln(
+      '\x1b[1;33m║\x1b[0m                   \x1b[90m"War. War Never Changes."\x1b[0m                        \x1b[1;33m║\x1b[0m'
+    );
+    term.writeln(
+      "\x1b[1;33m╚═══════════════════════════════════════════════════════════════════════════╝\x1b[0m"
+    );
+    term.writeln("");
+
+    // 5. Dynamic time-of-day landscape system
+    const timeOfDay = getTimeOfDay();
+    const timeLabels = {
+      dawn: "[Mojave Desert - Dawn - Day 2,299]",
+      day: "[Mojave Desert - Midday - Day 2,299]",
+      dusk: "[Mojave Desert - Dusk - Day 2,299]",
+      night: "[Mojave Desert - Night - Day 2,299]",
+    };
+
+    if (!skipBoot) await new Promise((r) => setTimeout(r, 300));
+
+    // Sun/Moon animation based on time
+    term.writeln(
+      `\x1b[90m                                            ${timeLabels[timeOfDay]}\x1b[0m`
+    );
+    term.writeln(
+      "\x1b[90m                                                                      \x1b[0m"
+    );
+
+    if (timeOfDay === "dawn") {
+      // Frame 1: Just peeking
+      if (!skipBoot) {
+        term.write("\r\x1b[1;33m                    .___.\x1b[0m");
+        await new Promise((r) => setTimeout(r, 200));
+        term.write("\r\x1b[1;33m                    .---.\x1b[0m");
+        await new Promise((r) => setTimeout(r, 200));
+        term.write("\r\x1b[1;33m                   /     \\\x1b[0m");
+        await new Promise((r) => setTimeout(r, 200));
+        term.write("\r\x1b[1;33m                   /  ☀  \\\x1b[0m");
+        await new Promise((r) => setTimeout(r, 200));
+      }
+      term.write("\r\x1b[1;33m                  |   ☀   |\x1b[0m");
+      term.writeln("");
+      if (!skipBoot) await new Promise((r) => setTimeout(r, 150));
+      term.writeln("\x1b[1;33m                   \\      /\x1b[0m");
+      if (!skipBoot) await new Promise((r) => setTimeout(r, 150));
+      term.writeln("\x1b[1;33m                    '--.--'\x1b[0m");
+    } else if (timeOfDay === "day") {
+      // High sun with heat shimmer effect
+      term.writeln("\x1b[1;33m                  .--∼∼--.\x1b[0m");
+      term.writeln(
+        "\x1b[1;33m                 /   ☀   \\\x1b[0m     \x1b[90m[Heat Shimmer]\x1b[0m"
+      );
+      term.writeln("\x1b[1;33m                 \\       /\x1b[0m");
+      term.writeln("\x1b[1;33m                  '--∼∼--'\x1b[0m");
+    } else if (timeOfDay === "dusk") {
+      // Orange/red sunset
+      term.writeln("\x1b[1;31m                  .------.\x1b[0m");
+      term.writeln(
+        "\x1b[1;31m                 /   ◉   \\\x1b[0m     \x1b[90m[Sunset]\x1b[0m"
+      );
+      term.writeln("\x1b[1;31m                 \\       /\x1b[0m");
+      term.writeln("\x1b[1;31m                  '------'\x1b[0m");
+    } else {
+      // Night - moon and stars
+      term.writeln(
+        "\x1b[37m        ·           .------.\x1b[0m         \x1b[37m   ·\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[37m                   /   ☾   \\\x1b[0m     \x1b[90m[Night]\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[37m     ·             \\       /\x1b[0m           \x1b[37m·\x1b[0m"
+      );
+      term.writeln(
+        "\x1b[37m                    '------'\x1b[0m      \x1b[37m·\x1b[0m"
+      );
+    }
+    term.writeln("");
+
+    if (!skipBoot) await new Promise((r) => setTimeout(r, 200));
+
+    // Detailed desert landscape with cacti, tumbleweeds, mountains
+    // Store landscape as lines for tumbleweed animation
+    const landscapeLines = [
+      "\x1b[1;90m      ▲\x1b[0m                                                          \x1b[1;90m▲▲\x1b[0m",
+      "\x1b[1;90m     ▲▲▲\x1b[0m      \x1b[33m/|\\\x1b[0m                                            \x1b[1;90m▲▲▲▲\x1b[0m",
+      "\x1b[1;90m    ▲▲ ▲▲\x1b[0m    \x1b[33m/ | \\\x1b[0m                        \x1b[33m  /|\\\x1b[0m           \x1b[1;90m▲▲▲ ▲▲\x1b[0m",
+      "\x1b[90m   ▲▲▲ ▲▲▲\x1b[0m  \x1b[33m/  |  \\\x1b[0m                      \x1b[33m / | \\\x1b[0m        \x1b[90m▲▲▲▲▲ ▲▲\x1b[0m",
+      "\x1b[90m  ▲▲▲▲▲▲▲▲▲\x1b[0m \x1b[33m  |||  \x1b[0m      TUMBLEWEED         \x1b[33m/  |||  \\\x1b[0m     \x1b[90m▲▲▲▲▲▲▲▲▲▲\x1b[0m",
+      "\x1b[90m ▲▲▲▲▲▲▲▲▲▲▲\x1b[0m \x1b[33m  |||  \x1b[0m                   \x1b[33m   |||   \x1b[0m   \x1b[90m▲▲▲▲▲▲▲▲▲▲▲▲\x1b[0m",
+      "\x1b[33m               |||                         |||                  \x1b[0m",
+      "\x1b[33m_______________|||_________________________|||__________________\x1b[0m",
+    ];
+
+    // 3. Enhanced Weather System - Multiple states
+    const weatherConditions = [
+      "clear",
+      "dust_storm",
+      "dust_devil",
+      "heat_shimmer",
+    ];
+    const currentWeather =
+      timeOfDay === "day"
+        ? weatherConditions[
+            Math.floor(Math.random() * weatherConditions.length)
+          ]
+        : weatherConditions[0]; // Clear at night/dawn/dusk
+
+    // 4. Tumbleweed drift animation with enhanced weather
+    const tumbleweedPositions = skipBoot ? [45] : [25, 30, 35, 40, 45];
+
+    for (let frameIdx = 0; frameIdx < tumbleweedPositions.length; frameIdx++) {
+      if (skipBoot && frameIdx > 0) break;
+      const pos = tumbleweedPositions[frameIdx];
+
+      // Clear and redraw landscape with tumbleweed
+      term.write("\x1b[8A"); // Move cursor up 8 lines
+
+      for (let i = 0; i < landscapeLines.length; i++) {
+        if (i === 4) {
+          // Tumbleweed line with dynamic weather
+          let line = landscapeLines[i].replace("TUMBLEWEED", " ".repeat(20));
+
+          // Apply weather effects
+          let weatherEffect = "      ";
+          if (currentWeather === "dust_storm") {
+            weatherEffect = "\x1b[90m∼∼∼∼∼∼\x1b[0m";
+          } else if (currentWeather === "dust_devil" && frameIdx === 2) {
+            weatherEffect = "\x1b[1;33m  ∽∿∽  \x1b[0m";
+          } else if (currentWeather === "heat_shimmer" && frameIdx % 2 === 0) {
+            weatherEffect = "\x1b[90m ∼ ∼ ∼\x1b[0m";
+          } else if (Math.random() > 0.6) {
+            weatherEffect = "\x1b[90m.·˙˙·.\x1b[0m";
+          }
+
+          line =
+            line.substring(0, pos) +
+            "\x1b[1;30m◐\x1b[0m" +
+            line.substring(pos + 1);
+          line = line.substring(0, 60) + weatherEffect + line.substring(66);
+          term.writeln(line);
+        } else {
+          term.writeln(landscapeLines[i]);
+        }
+      }
+      if (!skipBoot) await new Promise((r) => setTimeout(r, 200));
+    }
+
+    // Weather status message
+    const weatherMessages = {
+      clear: "\x1b[1;32m[Weather: Clear Skies]\x1b[0m",
+      dust_storm: "\x1b[1;33m[Weather: Dust Storm Warning]\x1b[0m",
+      dust_devil: "\x1b[1;33m[Weather: Dust Devil Detected]\x1b[0m",
+      heat_shimmer: "\x1b[1;33m[Weather: Extreme Heat]\x1b[0m",
+    };
+    term.writeln(
+      `                           ${weatherMessages[currentWeather]}`
+    );
+    term.writeln("");
+
+    await new Promise((r) => setTimeout(r, 250));
+
+    // Boot status messages
+    term.writeln(
+      "\x1b[1;32m[  OK  ]\x1b[0m Started Vault-Tec Terminal Interface"
+    );
+    await new Promise((r) => setTimeout(r, 100));
+    term.writeln("\x1b[1;32m[  OK  ]\x1b[0m Loaded NCR Radio Broadcast System");
+    await new Promise((r) => setTimeout(r, 100));
+    term.writeln(
+      "\x1b[1;32m[  OK  ]\x1b[0m Initialized Pip-Boy 3000 Compatibility Layer"
+    );
+    await new Promise((r) => setTimeout(r, 100));
+    term.writeln(
+      "\x1b[1;32m[  OK  ]\x1b[0m Mounted Lucky 38 Data Repositories"
+    );
+    await new Promise((r) => setTimeout(r, 100));
+    term.writeln(
+      "\x1b[1;32m[  OK  ]\x1b[0m Wasteland Survival Protocol Active"
+    );
+    term.writeln("");
+
+    await new Promise((r) => setTimeout(r, 200));
+
+    // Welcome message with location info
+    term.writeln(
+      "\x1b[1;31m╔═══════════════════════════════════════════════════════════════════════════╗\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m║\x1b[0m                                                                           \x1b[1;31m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m║\x1b[0m  \x1b[1;33mLocation:\x1b[0m Mojave Wasteland Terminal               \x1b[1;33mBuild:\x1b[0m Beta-2299    \x1b[1;31m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m║\x1b[0m  \x1b[1;33mOperator:\x1b[0m Tyler Limoges                           \x1b[1;33mRads:\x1b[0m 0.0          \x1b[1;31m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m║\x1b[0m  \x1b[1;33mFaction:\x1b[0m  Independent Courier                                        \x1b[1;31m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m║\x1b[0m                                                                           \x1b[1;31m║\x1b[0m"
+    );
+    term.writeln(
+      '\x1b[1;31m║\x1b[0m  \x1b[90m"The game was rigged from the start... but we\'re changing the rules."\x1b[0m  \x1b[1;31m║\x1b[0m'
+    );
+    term.writeln(
+      "\x1b[1;31m║\x1b[0m                                                                           \x1b[1;31m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m╚═══════════════════════════════════════════════════════════════════════════╝\x1b[0m"
+    );
+    term.writeln("");
+
+    await new Promise((r) => setTimeout(r, 300));
+
+    await typeText(
+      "\x1b[1;33m→\x1b[0m Type \x1b[1;31m'help'\x1b[0m to view available commands",
+      10
+    );
+    term.writeln("");
+    await typeText(
+      "\x1b[1;33m→\x1b[0m Type \x1b[1;31m'about'\x1b[0m to learn about this system",
+      10
+    );
+    term.writeln("");
+    await typeText(
+      "\x1b[1;33m→\x1b[0m Type \x1b[1;31m'banner'\x1b[0m for Wastelands ASCII art",
       10
     );
     term.writeln("\r\n");
+
     term.writeln(
-      "-------------------------------------------------------------------------------\r\n"
+      "\x1b[33m═══════════════════════════════════════════════════════════════════════════\x1b[0m\r\n"
     );
     term.write(PROMPT);
   };
@@ -245,15 +729,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     await animateWelcome();
     localStorage.setItem("welcomeAnimationShown", "true");
   } else {
-    // Show static welcome for returning users
+    // Show static welcome for returning users - Wastelands theme
     term.writeln(
-      "\x1b[1;31mSyn_OS v8.0 RED PHOENIX\x1b[0m - Welcome back, operator\r\n"
+      "\x1b[1;33m═══════════════════════════════════════════════════════════════════════════\x1b[0m"
+    );
+    term.writeln("");
+    term.writeln(
+      "\x1b[1;31m    WASTELANDS LINUX\x1b[0m - \x1b[90mPublic Beta Build 2299\x1b[0m"
+    );
+    term.writeln("\x1b[90m    Welcome back to the Mojave, Courier.\x1b[0m");
+    term.writeln("");
+    term.writeln(
+      "\x1b[90m         ▲▲▲\x1b[0m       \x1b[33m/|\\\x1b[0m                    \x1b[1;33m☀\x1b[0m"
+    );
+    term.writeln("\x1b[90m        ▲▲▲▲▲\x1b[0m     \x1b[33m/ | \\\x1b[0m");
+    term.writeln(
+      "\x1b[90m       ▲▲▲▲▲▲▲\x1b[0m    \x1b[33m  |||  \x1b[0m          \x1b[1;30m◐\x1b[0m"
+    );
+    term.writeln("\x1b[33m                   |||___________________\x1b[0m");
+    term.writeln("");
+    term.writeln(
+      "    Type \x1b[1;31m'help'\x1b[0m for commands | \x1b[1;31m'about'\x1b[0m for system info\r\n"
     );
     term.writeln(
-      "Type \x1b[1;31m'help'\x1b[0m for commands | \x1b[1;31m'about'\x1b[0m for v8.0 changes\r\n"
-    );
-    term.writeln(
-      "-------------------------------------------------------------------------------\r\n"
+      "\x1b[1;33m═══════════════════════════════════════════════════════════════════════════\x1b[0m\r\n"
     );
     term.write(PROMPT);
   }

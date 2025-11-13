@@ -2,14 +2,14 @@
   "help": {
     "description": "Display all available commands"
   },
-  \"tutorial\": {
-    \"description\": \"Interactive guide for first-time users\"
+  "tutorial": {
+    "description": "Interactive guide for first-time users"
   },
-  \"about\": {
-    \"description\": \"About Syn_OS v8.0 Red Phoenix theme\"
+  "about": {
+    "description": "About Syn_OS v8.0 Red Phoenix theme"
   },
-  \"security\": {
-    \"description\": \"View security implementation details\"
+  "security": {
+    "description": "View security implementation details"
   },
   "shortcuts": {
     "description": "Display keyboard shortcuts and tips"
