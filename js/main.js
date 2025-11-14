@@ -376,7 +376,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     term.write("\r" + drawHUD("POST", 10, 0, 0.0));
     term.write("\x1b[2B\r"); // Move back down
 
-    await typeText("\x1b[1;31mPerforming POST (Power-On Self-Test)...\x1b[0m", 8);
+    await typeText(
+      "\x1b[1;31mPerforming POST (Power-On Self-Test)...\x1b[0m",
+      8
+    );
     term.writeln("");
     if (!skipBoot) await new Promise((r) => setTimeout(r, 100));
 
@@ -566,36 +569,47 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!skipBoot) await new Promise((r) => setTimeout(r, 200));
 
-    // Expanded detailed desert landscape - Massive Mojave vista
+    // Expanded detailed desert landscape - Massive Mojave vista with enhanced detail
     // Store landscape as lines for tumbleweed animation
     const landscapeLines = [
-      // Sky layer with birds/vultures
-      "\x1b[1;31m                                  v                                    v\x1b[0m",
-      "\x1b[1;31m              v                                        v                 \x1b[0m",
+      // Sky layer with vultures circling
+      "\x1b[1;31m                              v                                v              \x1b[0m",
+      "\x1b[1;31m          v                                   v                         v     \x1b[0m",
+      "\x1b[1;31m                   v                                       v                  \x1b[0m",
       "",
-      // Distant mountain ranges (multiple layers for depth)
-      "\x1b[1;31m        ▲▲\x1b[0m                                                          \x1b[1;31m▲▲▲\x1b[0m",
-      "\x1b[1;31m       ▲▲▲▲\x1b[0m                                                        \x1b[1;31m▲▲▲▲▲\x1b[0m",
-      "\x1b[1;31m      ▲▲▲▲▲▲\x1b[0m         \x1b[1;31m▲▲\x1b[0m                                      \x1b[1;31m▲▲▲▲▲▲▲\x1b[0m",
-      "\x1b[1;31m     ▲▲▲▲▲▲▲▲\x1b[0m       \x1b[1;31m▲▲▲▲▲\x1b[0m                                  \x1b[1;31m▲▲▲▲▲▲▲▲▲\x1b[0m",
-      "\x1b[1;31m    ▲▲▲▲▲▲▲▲▲▲\x1b[0m     \x1b[1;31m▲▲▲▲▲▲▲\x1b[0m                              \x1b[1;31m▲▲▲▲▲▲▲▲▲▲▲\x1b[0m",
-      "\x1b[1;31m   ▲▲▲▲▲▲▲▲▲▲▲▲\x1b[0m   \x1b[1;31m▲▲▲▲▲▲▲▲▲\x1b[0m                          \x1b[1;31m▲▲▲▲▲▲▲▲▲▲▲▲▲\x1b[0m",
+      // Distant mountain ranges (multiple layers for atmospheric depth)
+      "\x1b[1;31m      ▲▲\x1b[0m                                                            \x1b[1;31m▲▲\x1b[0m",
+      "\x1b[1;31m     ▲▲▲▲\x1b[0m                                                          \x1b[1;31m▲▲▲▲\x1b[0m",
+      "\x1b[1;31m    ▲▲▲▲▲▲\x1b[0m        \x1b[1;31m▲▲\x1b[0m                                        \x1b[1;31m▲▲▲▲▲▲\x1b[0m",
+      "\x1b[1;31m   ▲▲▲▲▲▲▲▲\x1b[0m      \x1b[1;31m▲▲▲▲\x1b[0m                                      \x1b[1;31m▲▲▲▲▲▲▲▲\x1b[0m",
+      "\x1b[1;31m  ▲▲▲▲▲▲▲▲▲▲\x1b[0m    \x1b[1;31m▲▲▲▲▲▲\x1b[0m         \x1b[1;31m▲▲\x1b[0m                    \x1b[1;31m▲▲▲▲▲▲▲▲▲▲\x1b[0m",
+      "\x1b[1;31m ▲▲▲▲▲▲▲▲▲▲▲▲\x1b[0m  \x1b[1;31m▲▲▲▲▲▲▲▲\x1b[0m       \x1b[1;31m▲▲▲▲\x1b[0m                  \x1b[1;31m▲▲▲▲▲▲▲▲▲▲▲▲\x1b[0m",
+      "\x1b[1;31m▲▲▲▲▲▲▲▲▲▲▲▲▲▲\x1b[0m \x1b[1;31m▲▲▲▲▲▲▲▲▲▲\x1b[0m    \x1b[1;31m▲▲▲▲▲▲\x1b[0m              \x1b[1;31m▲▲▲▲▲▲▲▲▲▲▲▲▲▲\x1b[0m",
       "",
-      // Large saguaro cacti (left side)
-      "\x1b[1;31m        /|\\\x1b[0m                                       \x1b[1;31m    /|\\\x1b[0m",
-      "\x1b[1;31m       / | \\\x1b[0m          \x1b[1;31m  ||\x1b[0m                         \x1b[1;31m   / | \\\x1b[0m",
-      "\x1b[1;31m      /  |  \\\x1b[0m         \x1b[1;31m  ||\x1b[0m                        \x1b[1;31m  /  |  \\\x1b[0m              \x1b[1;31m/|\\\x1b[0m",
-      "\x1b[1;31m        |||  \x1b[0m          \x1b[1;31m /||\\\x1b[0m                         \x1b[1;31m   |||  \x1b[0m             \x1b[1;31m/ | \\\x1b[0m",
-      "\x1b[1;31m        |||  \x1b[0m         \x1b[1;31m/ || \\\x1b[0m                          \x1b[1;31m  |||  \x1b[0m            \x1b[1;31m/  |  \\\x1b[0m",
-      "\x1b[1;31m        |||  \x1b[0m        \x1b[1;31m   ||  \x1b[0m     TUMBLEWEED             \x1b[1;31m  |||  \x1b[0m             \x1b[1;31m  |||  \x1b[0m",
-      "\x1b[1;31m        |||  \x1b[0m        \x1b[1;31m   ||  \x1b[0m                            \x1b[1;31m  |||  \x1b[0m             \x1b[1;31m  |||  \x1b[0m",
-      // Ground debris and rocks
-      "\x1b[1;31m  •     \x1b[1;31m|||  \x1b[1;31m    o   \x1b[1;31m  ||  \x1b[1;31m        °                    \x1b[1;31m  |||  \x1b[1;31m    •       °  \x1b[1;31m  |||  \x1b[0m",
-      "\x1b[1;31m      ∙  \x1b[1;31m|||  \x1b[1;31m      ∙ \x1b[1;31m  ||  \x1b[1;31m  •        ∙               ∙  \x1b[1;31m  |||  \x1b[1;31m  •    ∙      \x1b[1;31m  |||  \x1b[0m",
-      // Sandy dunes and desert floor
-      "\x1b[1;31m        |||          ||                               |||           |||  \x1b[0m",
-      "\x1b[1;31m  ∼∼∼   |||    ∼∼    ||   ∼∼∼∼       ∼∼∼      ∼∼∼    |||    ∼∼∼   |||  \x1b[0m",
-      "\x1b[1;31m_______███_________ ██ ___________ __________ _______ ███ ________ ███__\x1b[0m",
+      // Mid-ground mesa formations
+      "\x1b[1;31m          ╔═══╗\x1b[0m                                            \x1b[1;31m╔═══╗\x1b[0m",
+      "\x1b[1;31m          ║███║\x1b[0m                                            \x1b[1;31m║███║\x1b[0m",
+      "\x1b[1;31m          ╚═══╝\x1b[0m                                            \x1b[1;31m╚═══╝\x1b[0m",
+      "",
+      // Large detailed saguaro cacti
+      "\x1b[1;31m      /|\\\x1b[0m                                             \x1b[1;31m  /|\\\x1b[0m",
+      "\x1b[1;31m     / | \\\x1b[0m        \x1b[1;31m  ||\x1b[0m                               \x1b[1;31m / | \\\x1b[0m",
+      "\x1b[1;31m    /  |  \\\x1b[0m       \x1b[1;31m  ||\x1b[0m                              \x1b[1;31m/  |  \\\x1b[0m         \x1b[1;31m/|\\\x1b[0m",
+      "\x1b[1;31m   /   |   \\\x1b[0m      \x1b[1;31m /||\\\x1b[0m                             \x1b[1;31m   |   \\\x1b[0m       \x1b[1;31m/ | \\\x1b[0m",
+      "\x1b[1;31m      |||  \x1b[0m       \x1b[1;31m/ || \\\x1b[0m                              \x1b[1;31m  |||  \x1b[0m      \x1b[1;31m/  |  \\\x1b[0m",
+      "\x1b[1;31m      |||  \x1b[0m      \x1b[1;31m/  ||  \\\x1b[0m                               \x1b[1;31m |||  \x1b[0m       \x1b[1;31m  |||  \x1b[0m",
+      "\x1b[1;31m      |||  \x1b[0m      \x1b[1;31m   ||   \x1b[0m   TUMBLEWEED                \x1b[1;31m |||  \x1b[0m       \x1b[1;31m  |||  \x1b[0m",
+      "\x1b[1;31m      |||  \x1b[0m      \x1b[1;31m   ||   \x1b[0m                              \x1b[1;31m |||  \x1b[0m       \x1b[1;31m  |||  \x1b[0m",
+      "\x1b[1;31m      |||  \x1b[0m      \x1b[1;31m   ||   \x1b[0m                              \x1b[1;31m |||  \x1b[0m       \x1b[1;31m  |||  \x1b[0m",
+      // Ground debris, rocks, and desert scrub
+      "\x1b[1;31m  •   |||  \x1b[0m  \x1b[1;31m o   ||   \x1b[0m  \x1b[1;31m°\x1b[0m              \x1b[1;31m∙\x1b[0m       \x1b[1;31m  •   |||  \x1b[0m   \x1b[1;31m°      |||  \x1b[0m\x1b[1;31m∙\x1b[0m",
+      "\x1b[1;31m    ∙ |||  \x1b[0m\x1b[1;31m    ∙ ||   \x1b[0m \x1b[1;31m •\x1b[0m        \x1b[1;31m°\x1b[0m       \x1b[1;31m∙\x1b[0m     \x1b[1;31m    ∙  |||  \x1b[0m\x1b[1;31m •   ∙    |||  \x1b[0m",
+      "\x1b[1;31m   °  |||  \x1b[0m  \x1b[1;31m°   ||   \x1b[0m      \x1b[1;31m∙\x1b[0m   \x1b[1;31m•\x1b[0m     \x1b[1;31m°\x1b[0m        \x1b[1;31m°      |||  \x1b[0m    \x1b[1;31m°   |||  \x1b[0m",
+      // Sandy dunes with wind patterns
+      "\x1b[1;31m      |||      ||                                   |||          |||  \x1b[0m",
+      "\x1b[1;31m ∼∼   |||  ∼∼  ||   ∼∼∼         ∼∼         ∼∼∼     |||    ∼∼    |||  \x1b[0m",
+      "\x1b[1;31m  ∼∼∼ ███ ∼∼ ∼ ██  ∼∼  ∼∼     ∼   ∼     ∼∼  ∼∼   ███  ∼∼  ∼  ███  \x1b[0m",
+      "\x1b[1;31m______███______ ██ _________ __________ _________ ███ ________ ███__\x1b[0m",
     ];
 
     // 3. Enhanced Weather System - Multiple states
@@ -623,7 +637,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       term.write(`\x1b[${landscapeLines.length}A`); // Move cursor up to redraw
 
       for (let i = 0; i < landscapeLines.length; i++) {
-        if (i === 15) {
+        if (i === 23) {
           // Tumbleweed line (middle cactus line) with dynamic weather
           let line = landscapeLines[i].replace("TUMBLEWEED", " ".repeat(10));
 
@@ -758,7 +772,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await animateWelcome();
     localStorage.setItem("welcomeAnimationShown", "true");
   } else {
-    // Show static welcome for returning users - Expanded Wastelands theme
+    // Show static welcome for returning users - Detailed Wastelands vista
     term.writeln(
       "\x1b[1;31m═══════════════════════════════════════════════════════════════════════════\x1b[0m"
     );
@@ -771,31 +785,57 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     term.writeln("");
     term.writeln(
-      "\x1b[1;31m                      .------.\x1b[0m                    \x1b[1;31m v\x1b[0m"
+      "\x1b[1;31m                 v            .------.\x1b[0m              \x1b[1;31m v\x1b[0m"
     );
-    term.writeln("\x1b[1;31m                     /   SUN   \\\x1b[0m");
+    term.writeln("\x1b[1;31m                             /   SUN   \\\x1b[0m");
     term.writeln(
-      "\x1b[1;31m                     \\       /\x1b[0m              \x1b[1;31m v\x1b[0m"
+      "\x1b[1;31m           v                 \\       /\x1b[0m         \x1b[1;31m v\x1b[0m"
     );
-    term.writeln("\x1b[1;31m                      '------'\x1b[0m");
+    term.writeln("\x1b[1;31m                              '------'\x1b[0m");
     term.writeln("");
     term.writeln(
-      "\x1b[1;31m          ▲▲▲▲\x1b[0m                                        \x1b[1;31m▲▲▲\x1b[0m"
+      "\x1b[1;31m       ▲▲▲\x1b[0m                                            \x1b[1;31m▲▲▲\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m         ▲▲▲▲▲▲\x1b[0m          \x1b[1;31m/|\\\x1b[0m                        \x1b[1;31m▲▲▲▲▲\x1b[0m"
+      "\x1b[1;31m      ▲▲▲▲▲\x1b[0m           \x1b[1;31m▲▲\x1b[0m                            \x1b[1;31m▲▲▲▲▲\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m        ▲▲▲▲▲▲▲▲\x1b[0m        \x1b[1;31m/ | \\\x1b[0m                      \x1b[1;31m▲▲▲▲▲▲▲\x1b[0m"
+      "\x1b[1;31m     ▲▲▲▲▲▲▲\x1b[0m         \x1b[1;31m▲▲▲▲\x1b[0m                          \x1b[1;31m▲▲▲▲▲▲▲\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m       ▲▲▲▲▲▲▲▲▲▲\x1b[0m      \x1b[1;31m/  |  \\\x1b[0m                   \x1b[1;31m▲▲▲▲▲▲▲▲▲\x1b[0m"
+      "\x1b[1;31m    ▲▲▲▲▲▲▲▲▲\x1b[0m       \x1b[1;31m▲▲▲▲▲▲\x1b[0m                        \x1b[1;31m▲▲▲▲▲▲▲▲▲\x1b[0m"
+    );
+    term.writeln("");
+    term.writeln(
+      "\x1b[1;31m        ╔═══╗\x1b[0m                                        \x1b[1;31m╔═══╗\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m  •      \x1b[1;31m          |||  \x1b[0m        \x1b[1;30mO\x1b[0m                  \x1b[1;31m  |||  \x1b[0m     \x1b[1;31m •\x1b[0m"
+      "\x1b[1;31m        ║███║\x1b[0m                                        \x1b[1;31m║███║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m  ∼∼∼∼∼  _____ ███ ________ __________ _______ ███ _______  ∼∼∼∼\x1b[0m"
+      "\x1b[1;31m        ╚═══╝\x1b[0m                                        \x1b[1;31m╚═══╝\x1b[0m"
+    );
+    term.writeln("");
+    term.writeln(
+      "\x1b[1;31m     /|\\\x1b[0m              \x1b[1;31m||\x1b[0m                            \x1b[1;31m/|\\\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m    / | \\\x1b[0m             \x1b[1;31m||\x1b[0m                           \x1b[1;31m/ | \\\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m   /  |  \\\x1b[0m           \x1b[1;31m/||\\\x1b[0m                         \x1b[1;31m/  |  \\\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m     |||  \x1b[0m           \x1b[1;31m |||  \x1b[0m         \x1b[1;30mO\x1b[0m              \x1b[1;31m  |||  \x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m  •  |||  \x1b[0m  \x1b[1;31m°\x1b[0m        \x1b[1;31m |||  \x1b[0m   \x1b[1;31m∙\x1b[0m             \x1b[1;31m∙\x1b[0m     \x1b[1;31m  |||  \x1b[0m \x1b[1;31m°\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m     |||      ∼∼   ███  ∼∼  ∼∼     ∼∼  ∼∼    ███   ∼∼\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m_____███_________ ███ __________ __________ ███ __________\x1b[0m"
     );
     term.writeln("");
     term.writeln(
@@ -969,7 +1009,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       term.writeln("\r\n\x1b[1;31m> Logging out...\x1b[0m");
       setTimeout(() => {
         term.writeln("\x1b[1;31m+ Session saved\x1b[0m");
-        term.writeln("\x1b[1;31mThanks for visiting! Refresh to restart.\x1b[0m");
+        term.writeln(
+          "\x1b[1;31mThanks for visiting! Refresh to restart.\x1b[0m"
+        );
       }, 500);
       return;
     } else if (domEvent.ctrlKey && key === "r") {
@@ -1469,9 +1511,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       term.writeln("   \x1b[1;31m└─\x1b[0m Self-healing error boundaries\r\n");
 
       term.writeln("\x1b[1;31m2. Subresource Integrity (SRI)\x1b[0m");
-      term.writeln("   \x1b[1;31m├─\x1b[0m SHA-384 hashes on all CDN resources");
+      term.writeln(
+        "   \x1b[1;31m├─\x1b[0m SHA-384 hashes on all CDN resources"
+      );
       term.writeln("   \x1b[1;31m├─\x1b[0m xterm.js: Integrity verified");
-      term.writeln("   \x1b[1;31m├─\x1b[0m xterm-addon-fit: Integrity verified");
+      term.writeln(
+        "   \x1b[1;31m├─\x1b[0m xterm-addon-fit: Integrity verified"
+      );
       term.writeln(
         "   \x1b[1;31m└─\x1b[0m Supply chain attack prevention: \x1b[1;31mACTIVE ✅\x1b[0m\r\n"
       );
@@ -1503,7 +1549,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       term.writeln("\x1b[1;31m6. Testing & Validation\x1b[0m");
       term.writeln("   \x1b[1;31m├─\x1b[0m 146 automated tests passing");
       term.writeln("   \x1b[1;31m├─\x1b[0m Security test suite: 100% coverage");
-      term.writeln("   \x1b[1;31m├─\x1b[0m XSS vulnerability tests: All passing");
+      term.writeln(
+        "   \x1b[1;31m├─\x1b[0m XSS vulnerability tests: All passing"
+      );
       term.writeln(
         "   \x1b[1;31m└─\x1b[0m Command injection tests: All passing\r\n"
       );
@@ -1691,7 +1739,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           Object.keys(aliases).length
         }\x1b[0m`
       );
-      term.writeln(`   \x1b[1;31m├─\x1b[0m PWA enabled: \x1b[1;31m+ Yes\x1b[0m`);
+      term.writeln(
+        `   \x1b[1;31m├─\x1b[0m PWA enabled: \x1b[1;31m+ Yes\x1b[0m`
+      );
       term.writeln(
         `   \x1b[1;31m└─\x1b[0m Offline ready: \x1b[1;31m+ Yes\x1b[0m\r\n`
       );
@@ -2237,7 +2287,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       term.writeln(
         "  \x1b[1;31m●●○○○\x1b[0m Binary Exploitation & Reverse Engineering"
       );
-      term.writeln("  \x1b[1;31m●●○○○\x1b[0m EDR Evasion & Red Team Techniques");
+      term.writeln(
+        "  \x1b[1;31m●●○○○\x1b[0m EDR Evasion & Red Team Techniques"
+      );
       term.writeln(
         "  \x1b[1;31m●●●●○\x1b[0m Security Tool Integration & Automation\r\n"
       );
@@ -2257,8 +2309,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
 
       term.writeln("\x1b[1;31m// DOMAIN EXPERTISE //\x1b[0m");
-      term.writeln("  \x1b[1;31m●●●●●\x1b[0m Critical Infrastructure Operations");
-      term.writeln("  \x1b[1;31m●●●●●\x1b[0m Incident Response (Medical/Trauma)");
+      term.writeln(
+        "  \x1b[1;31m●●●●●\x1b[0m Critical Infrastructure Operations"
+      );
+      term.writeln(
+        "  \x1b[1;31m●●●●●\x1b[0m Incident Response (Medical/Trauma)"
+      );
       term.writeln("  \x1b[1;31m●●●●○\x1b[0m Compliance (HIPAA, PHI Handling)");
       term.writeln("  \x1b[1;31m●●●●○\x1b[0m High-Pressure Decision Making");
       term.writeln("  \x1b[1;31m●●●●○\x1b[0m Team Leadership & Training\r\n");
@@ -2350,7 +2406,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       term.writeln(
         "  \x1b[1;31mFocus:\x1b[0m Security, automation, systems programming"
       );
-      term.writeln("  \x1b[1;31mRate:\x1b[0m Competitive, project-based pricing");
+      term.writeln(
+        "  \x1b[1;31mRate:\x1b[0m Competitive, project-based pricing"
+      );
       term.writeln(
         "  \x1b[1;31mTimeline:\x1b[0m Flexible scheduling around full-time studies\r\n"
       );
@@ -2542,7 +2600,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         "  \x1b[1;31m4. eJPT (Junior Penetration Tester)\x1b[0m \x1b[1;31m[STUDYING]\x1b[0m"
       );
       term.writeln("     \x1b[1;31m├─\x1b[0m Cost: ~$249 | Time: 1-3 months");
-      term.writeln("     \x1b[1;31m├─\x1b[0m Format: 48-hour hands-on lab exam");
+      term.writeln(
+        "     \x1b[1;31m├─\x1b[0m Format: 48-hour hands-on lab exam"
+      );
       term.writeln(
         "     \x1b[1;31m├─\x1b[0m Why: Best first step into practical hacking"
       );
@@ -2595,7 +2655,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       term.writeln(
         "  \x1b[1;31m8. OSCP (Gold Standard)\x1b[0m \x1b[31m[LONG-TERM GOAL]\x1b[0m"
       );
-      term.writeln("     \x1b[1;31m├─\x1b[0m Cost: ~$1,749 | Time: 6-12+ months");
+      term.writeln(
+        "     \x1b[1;31m├─\x1b[0m Cost: ~$1,749 | Time: 6-12+ months"
+      );
       term.writeln(
         '     \x1b[1;31m├─\x1b[0m Format: 24-hour practical exam ("Try Harder")'
       );
@@ -2779,10 +2841,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       term.writeln(
         "  \x1b[1;31m[NOW - NOV 2025]\x1b[0m Network+ → Security foundation"
       );
-      term.writeln("  \x1b[1;31m[DEC 2025]\x1b[0m Security+ → Industry baseline");
+      term.writeln(
+        "  \x1b[1;31m[DEC 2025]\x1b[0m Security+ → Industry baseline"
+      );
       term.writeln("  \x1b[1;31m[Q1 2026]\x1b[0m eJPT → First practical cert");
       term.writeln("  \x1b[1;31m[Q2 2026]\x1b[0m PNPT → Real-world AD skills");
-      term.writeln("  \x1b[1;31m[MID-2026]\x1b[0m OSCP → Industry gold standard");
+      term.writeln(
+        "  \x1b[1;31m[MID-2026]\x1b[0m OSCP → Industry gold standard"
+      );
       term.writeln(
         "  \x1b[1;31m[2027+]\x1b[0m OSEP/CRTP → Red team operator\r\n"
       );
@@ -3292,7 +3358,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           term.writeln(
             "  \x1b[1;31m→ Type 'pursuits' for my CTF profiles\x1b[0m"
           );
-          term.writeln("  \x1b[1;31m→ Type 'blog' for security research\x1b[0m");
+          term.writeln(
+            "  \x1b[1;31m→ Type 'blog' for security research\x1b[0m"
+          );
         }
       };
       term.writeln("");
