@@ -288,7 +288,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const animateWelcome = async () => {
     // WASTELANDS BOOT SEQUENCE - Fallout New Vegas inspired
 
-    // 5. Lucky 33 Casino Boot Logo
+    // Personal branding boot logo
     term.writeln(
       "\x1b[1;31m╔═══════════════════════════════════════════════════════════════════════════╗\x1b[0m"
     );
@@ -296,43 +296,43 @@ document.addEventListener("DOMContentLoaded", async () => {
       "\x1b[1;31m║\x1b[0m                                                                           \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m                 \x1b[1;31m██╗     ██╗   ██╗ ██████╗██╗  ██╗██╗   ██╗\x1b[0m               \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m           \x1b[1;31m████████╗    ██╗     ██╗███╗   ███╗ ██████╗  ██████╗ ███████╗\x1b[0m    \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m                 \x1b[1;31m██║     ██║   ██║██╔════╝██║ ██╔╝╚██╗ ██╔╝\x1b[0m               \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m           \x1b[1;31m╚══██╔══╝    ██║     ██║████╗ ████║██╔═══██╗██╔════╝ ██╔════╝\x1b[0m    \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m                 \x1b[1;31m██║     ██║   ██║██║     █████╔╝  ╚████╔╝\x1b[0m                \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m              \x1b[1;31m██║       ██║     ██║██╔████╔██║██║   ██║██║  ███╗█████╗\x1b[0m      \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m                 \x1b[1;31m██║     ██║   ██║██║     ██╔═██╗   ╚██╔╝\x1b[0m                 \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m              \x1b[1;31m██║       ██║     ██║██║╚██╔╝██║██║   ██║██║   ██║██╔══╝\x1b[0m      \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m                 \x1b[1;31m███████╗╚██████╔╝╚██████╗██║  ██╗   ██║\x1b[0m                  \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m              \x1b[1;31m██║       ███████╗██║██║ ╚═╝ ██║╚██████╔╝╚██████╔╝███████╗\x1b[0m    \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m                 \x1b[1;31m╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝   ╚═╝\x1b[0m                  \x1b[1;31m║\x1b[0m"
-    );
-    term.writeln(
-      "\x1b[1;31m║\x1b[0m                                                                           \x1b[1;31m║\x1b[0m"
-    );
-    term.writeln(
-      "\x1b[1;31m║\x1b[0m                         \x1b[1;31m╔═══════════════════╗\x1b[0m                          \x1b[1;31m║\x1b[0m"
-    );
-    term.writeln(
-      "\x1b[1;31m║\x1b[0m                         \x1b[1;31m║\x1b[0m    \x1b[1;31m33 CASINO\x1b[0m      \x1b[1;31m║\x1b[0m                          \x1b[1;31m║\x1b[0m"
-    );
-    term.writeln(
-      "\x1b[1;31m║\x1b[0m                         \x1b[1;31m╚═══════════════════╝\x1b[0m                          \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m              \x1b[1;31m╚═╝       ╚══════╝╚═╝╚═╝     ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝\x1b[0m    \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
       "\x1b[1;31m║\x1b[0m                                                                           \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m                    \x1b[1;31mRobCo Industries Unified Operating System\x1b[0m          \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m                         \x1b[1;31m╔═══════════════════════╗\x1b[0m                        \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m                         \x1b[1;31mCopyright 2077-2299 (C) RobCo\x1b[0m                   \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m                         \x1b[1;31m║\x1b[0m    \x1b[1;31m[ DIABLORAIN ]\x1b[0m     \x1b[1;31m║\x1b[0m                        \x1b[1;31m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m║\x1b[0m                         \x1b[1;31m╚═══════════════════════╝\x1b[0m                        \x1b[1;31m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m║\x1b[0m                                                                           \x1b[1;31m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m║\x1b[0m                  \x1b[1;31mCybersecurity Portfolio & Research Terminal\x1b[0m              \x1b[1;31m║\x1b[0m"
+    );
+    term.writeln(
+      "\x1b[1;31m║\x1b[0m                       \x1b[1;31mEthical AI Red Team | OPSEC Specialist\x1b[0m               \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
       "\x1b[1;31m║\x1b[0m                                                                           \x1b[1;31m║\x1b[0m"
@@ -353,7 +353,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Initial BIOS-style boot messages
     playBeep(1000, 100);
-    await typeText("\x1b[1;31m[BIOS v2.51] Wastelands Linux Distro\x1b[0m", 8);
+    await typeText(
+      "\x1b[1;31m[BIOS v3.14] T.Limoges Portfolio Terminal\x1b[0m",
+      8
+    );
     term.writeln("");
     if (!skipBoot) await new Promise((r) => setTimeout(r, 150));
 
@@ -363,7 +366,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     term.writeln("\x1b[1;31m[OK]\x1b[0m");
 
     await typeText(
-      "\x1b[1;31mInitializing Vault-Tec Unified Operating System... \x1b[0m",
+      "\x1b[1;31mInitializing DiabloRain Security Terminal... \x1b[0m",
       8
     );
     if (!skipBoot) await new Promise((r) => setTimeout(r, 300));
@@ -478,7 +481,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!skipBoot) await new Promise((r) => setTimeout(r, 200));
 
-    term.writeln("\x1b[1;31mLoading Mojave Wasteland Kernel 5.76.2299\x1b[0m");
+    term.writeln(
+      "\x1b[1;31mLoading Red Phoenix Security Kernel 8.4.2025\x1b[0m"
+    );
     if (!skipBoot) await new Promise((r) => setTimeout(r, 200));
     term.writeln("");
 
@@ -487,10 +492,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       "\x1b[1;31m╔═══════════════════════════════════════════════════════════════════════════╗\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m                     \x1b[1;31mWASTELANDS LINUX - Public Beta\x1b[0m                    \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m                   \x1b[1;31mT LIMOGES - Cybersecurity Portfolio\x1b[0m                   \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      '\x1b[1;31m║\x1b[0m                   \x1b[1;31m"War. War Never Changes."\x1b[0m                        \x1b[1;31m║\x1b[0m'
+      '\x1b[1;31m║\x1b[0m                  \x1b[1;31m"Securing Systems, One Line at a Time"\x1b[0m                \x1b[1;31m║\x1b[0m'
     );
     term.writeln(
       "\x1b[1;31m╚═══════════════════════════════════════════════════════════════════════════╝\x1b[0m"
@@ -692,21 +697,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Boot status messages
     term.writeln(
-      "\x1b[1;31m[  OK  ]\x1b[0m Started Vault-Tec Terminal Interface"
-    );
-    await new Promise((r) => setTimeout(r, 100));
-    term.writeln("\x1b[1;31m[  OK  ]\x1b[0m Loaded NCR Radio Broadcast System");
-    await new Promise((r) => setTimeout(r, 100));
-    term.writeln(
-      "\x1b[1;31m[  OK  ]\x1b[0m Initialized Pip-Boy 3000 Compatibility Layer"
+      "\x1b[1;31m[  OK  ]\x1b[0m Started Red Phoenix Terminal Interface"
     );
     await new Promise((r) => setTimeout(r, 100));
     term.writeln(
-      "\x1b[1;31m[  OK  ]\x1b[0m Mounted Lucky 38 Data Repositories"
+      "\x1b[1;31m[  OK  ]\x1b[0m Loaded Portfolio Data Repositories"
     );
     await new Promise((r) => setTimeout(r, 100));
     term.writeln(
-      "\x1b[1;31m[  OK  ]\x1b[0m Wasteland Survival Protocol Active"
+      "\x1b[1;31m[  OK  ]\x1b[0m Initialized Security Command Parser"
+    );
+    await new Promise((r) => setTimeout(r, 100));
+    term.writeln(
+      "\x1b[1;31m[  OK  ]\x1b[0m Mounted Cybersecurity Research Database"
+    );
+    await new Promise((r) => setTimeout(r, 100));
+    term.writeln(
+      "\x1b[1;31m[  OK  ]\x1b[0m DiabloRain Authentication Protocol Active"
     );
     term.writeln("");
 
@@ -720,19 +727,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       "\x1b[1;31m║\x1b[0m                                                                           \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m  \x1b[1;31mLocation:\x1b[0m Mojave Wasteland Terminal               \x1b[1;31mBuild:\x1b[0m Beta-2299    \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m  \x1b[1;31mSystem:\x1b[0m   DiabloRain Security Terminal           \x1b[1;31mBuild:\x1b[0m v8.4-2025  \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m  \x1b[1;31mOperator:\x1b[0m Tyler Limoges                           \x1b[1;31mRads:\x1b[0m 0.0          \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m  \x1b[1;31mOperator:\x1b[0m Tyler Limoges (TLimoges33)             \x1b[1;31mStatus:\x1b[0m ACTIVE   \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m  \x1b[1;31mFaction:\x1b[0m  Independent Courier                                        \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m  \x1b[1;31mRole:\x1b[0m     Ethical AI Red Teamer | OPSEC Specialist                  \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
       "\x1b[1;31m║\x1b[0m                                                                           \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      '\x1b[1;31m║\x1b[0m  \x1b[1;31m"The game was rigged from the start... but we\'re changing the rules."\x1b[0m  \x1b[1;31m║\x1b[0m'
+      '\x1b[1;31m║\x1b[0m  \x1b[1;31m"Security through knowledge. Excellence through practice."\x1b[0m            \x1b[1;31m║\x1b[0m'
     );
     term.writeln(
       "\x1b[1;31m║\x1b[0m                                                                           \x1b[1;31m║\x1b[0m"
@@ -772,16 +779,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     await animateWelcome();
     localStorage.setItem("welcomeAnimationShown", "true");
   } else {
-    // Show static welcome for returning users - Detailed Wastelands vista
+    // Show static welcome for returning users - Portfolio branding
     term.writeln(
       "\x1b[1;31m═══════════════════════════════════════════════════════════════════════════\x1b[0m"
     );
     term.writeln("");
     term.writeln(
-      "\x1b[1;31m               WASTELANDS LINUX\x1b[0m - \x1b[1;31mPublic Beta Build 2299\x1b[0m"
+      "\x1b[1;31m            T LIMOGES PORTFOLIO\x1b[0m - \x1b[1;31mDiabloRain Security Terminal\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m                 Welcome back to the Mojave, Courier.\x1b[0m"
+      "\x1b[1;31m               Welcome back. Systems operational.\x1b[0m"
     );
     term.writeln("");
     term.writeln(
