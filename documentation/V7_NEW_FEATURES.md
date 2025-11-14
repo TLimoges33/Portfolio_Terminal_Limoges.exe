@@ -249,7 +249,7 @@ coffee
 
 # Watch "hacking" animation
 hack
-# Output: ACCESS GRANTED - DIABLORAIN MODE
+# Output: ACCESS GRANTED - TLIMOGES MODE
 
 # Unlock achievement
 konami

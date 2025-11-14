@@ -25,15 +25,15 @@ This portfolio represents the intersection of **systems programming**, **cyberse
 - **Performance**: Offline-first architecture, caching strategies, Web Vitals optimization
 - **DevOps**: CI/CD pipelines, automated testing, deployment automation
 
-### 💡 Why a Terminal Portfolio?
+### Why a Terminal Portfolio?
 
 As a cybersecurity professional transitioning from critical infrastructure (Level 1 Trauma Centers) to offensive security, the terminal is my native environment. This portfolio isn't just about showcasing projects—it's about demonstrating comfort in the command line, understanding of Unix/Linux systems, and ability to build production-grade applications from scratch.
 
 ---
 
-## ✨ Features
+## Features
 
-### 🔧 Core Functionality
+### Core Functionality
 
 - **25+ Interactive Commands**: Navigate through experience, projects, certifications, and research
 - **Fuzzy Tab Autocomplete**: Intelligent command completion with similarity scoring
@@ -52,7 +52,7 @@ As a cybersecurity professional transitioning from critical infrastructure (Leve
 - **Typography**: IBM Plex Mono for terminal perfection, Rajdhani for angular military feel
 - **Philosophy**: "You're not learning security, you're operating a weapon system"
 
-### 🎨 Advanced Features
+### Advanced Features
 
 - **9 Terminal Themes**: Syn_OS Red Phoenix (default), Classic Green (legacy), Matrix, Cyberpunk, Hacker, Nord, Dracula, Monokai, Minimal
 - **Rate Limiting**: Professional command spam prevention (20 cmd/10s)
@@ -63,13 +63,13 @@ As a cybersecurity professional transitioning from critical infrastructure (Leve
 - **Man Pages**: Built-in documentation system
 - **Easter Eggs**: Hidden commands (`coffee`, `hack-the-planet`, `matrix`, `konami`)
 
-### 🤖 AI Integration
+### AI Integration
 
 - **AI Career Advisor**: Intelligent portfolio guidance powered by rule-based system
 - **Hugging Face API Support**: Optional LLM integration for advanced queries
 - **Contextual Responses**: Portfolio-aware recommendations
 
-### 🔒 Security Features
+### Security Features
 
 - **Content Security Policy**: Strict CSP headers prevent XSS attacks
 - **Input Sanitization**: All user input properly escaped
@@ -77,7 +77,7 @@ As a cybersecurity professional transitioning from critical infrastructure (Leve
 - **HTTPS Enforcement**: Secure-by-default configuration
 - **No External Dependencies**: Core functionality works offline
 
-### 📱 Progressive Web App
+### Progressive Web App
 
 - **Installable**: Add to home screen on mobile/desktop
 - **Offline Support**: Full functionality without internet
@@ -87,7 +87,7 @@ As a cybersecurity professional transitioning from critical infrastructure (Leve
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -143,7 +143,7 @@ This is a static site with no build step required. Simply deploy the following f
 
 ---
 
-## 🏗️ Architecture
+## ️ Architecture
 
 ### System Design
 
@@ -188,7 +188,7 @@ This is a static site with no build step required. Simply deploy the following f
 
 ---
 
-## 📚 Available Commands
+## Available Commands
 
 ### Core Commands
 
@@ -236,7 +236,7 @@ konami               # Secret achievement unlock
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Test Suite
 
@@ -261,7 +261,7 @@ npm run test:ui
 
 ---
 
-## 🔐 Security
+## Security
 
 ### Implemented Protections
 
@@ -293,7 +293,7 @@ npm run test:ui
 
 ---
 
-## 📈 Performance
+## Performance
 
 ### Metrics
 
@@ -313,7 +313,7 @@ npm run test:ui
 
 ---
 
-## 🛠️ Development
+## ️ Development
 
 ### Project Structure
 
@@ -408,7 +408,7 @@ npm run lint:fix
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
@@ -426,15 +426,15 @@ Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
-## 📄 License
+## License
 
 MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-## 👤 Author
+## Author
 
-**Tyler Limoges** (DiabloRain)
+**Tyler Limoges** 
 
 - 🎓 BS Cybersecurity @ SNHU (3.9 GPA)
 - 🏥 5+ years critical infrastructure experience
@@ -449,7 +449,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **xterm.js**: Terminal emulation library
 - **Vitest**: Fast unit testing framework
@@ -465,8 +465,6 @@ MIT License - see [LICENSE](LICENSE) for details.
 ![Tests](https://img.shields.io/badge/tests-73%20passing-success)
 ![Themes](https://img.shields.io/badge/themes-8-purple)
 ![Security Score](https://img.shields.io/badge/security-9.5%2F10-brightgreen)
-
-**Built with 🔴 and ~47 cups of ☕**
 
 **New in v8.0 RED PHOENIX**:
 

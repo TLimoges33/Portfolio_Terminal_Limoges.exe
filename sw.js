@@ -1,4 +1,4 @@
-// Service Worker for Ty Limoges (DiabloRain) Portfolio
+// Service Worker for Ty Limoges (T.Limoges) Portfolio
 // Enables offline capability and PWA functionality
 
 const CACHE_NAME = "tylimoges-v6.0.0";

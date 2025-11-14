@@ -1,1 +1,0 @@
-Open index.html in your browser and run: localStorage.removeItem('welcomeAnimationShown'); location.reload()

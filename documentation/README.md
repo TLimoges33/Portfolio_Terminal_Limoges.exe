@@ -1,6 +1,6 @@
 # 📚 Documentation
 
-This folder contains all project documentation for Ty Limoges' (DiabloRain) terminal portfolio.
+This folder contains all project documentation for Ty Limoges' (T.Limoges) terminal portfolio.
 
 ---
 
@@ -129,7 +129,7 @@ This documentation supports a **B+ (83/100) grade portfolio** showcasing:
 - ✅ Comprehensive certification research
 - ✅ Professional web development practices
 
-**Owner:** Ty Limoges (DiabloRain)  
+**Owner:** Ty Limoges (T.Limoges)  
 **Status:** Production Ready  
 **Last Updated:** October 24, 2025
 

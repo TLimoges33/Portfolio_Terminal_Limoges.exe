@@ -320,7 +320,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       "\x1b[1;31m║\x1b[0m                         \x1b[1;31m╔═══════════════════════╗\x1b[0m                        \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m                         \x1b[1;31m║\x1b[0m    \x1b[1;31m[ DIABLORAIN ]\x1b[0m     \x1b[1;31m║\x1b[0m                        \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m                         \x1b[1;31m║\x1b[0m    \x1b[1;31m[ TLIMOGES ]\x1b[0m     \x1b[1;31m║\x1b[0m                        \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
       "\x1b[1;31m║\x1b[0m                         \x1b[1;31m╚═══════════════════════╝\x1b[0m                        \x1b[1;31m║\x1b[0m"
@@ -366,7 +366,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     term.writeln("\x1b[1;31m[OK]\x1b[0m");
 
     await typeText(
-      "\x1b[1;31mInitializing DiabloRain Security Terminal... \x1b[0m",
+      "\x1b[1;31mInitializing T.Limoges Security Terminal... \x1b[0m",
       8
     );
     if (!skipBoot) await new Promise((r) => setTimeout(r, 300));
@@ -713,7 +713,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     await new Promise((r) => setTimeout(r, 100));
     term.writeln(
-      "\x1b[1;31m[  OK  ]\x1b[0m DiabloRain Authentication Protocol Active"
+      "\x1b[1;31m[  OK  ]\x1b[0m T.Limoges Authentication Protocol Active"
     );
     term.writeln("");
 
@@ -727,7 +727,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       "\x1b[1;31m║\x1b[0m                                                                           \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
-      "\x1b[1;31m║\x1b[0m  \x1b[1;31mSystem:\x1b[0m   DiabloRain Security Terminal           \x1b[1;31mBuild:\x1b[0m v8.4-2025  \x1b[1;31m║\x1b[0m"
+      "\x1b[1;31m║\x1b[0m  \x1b[1;31mSystem:\x1b[0m   T.Limoges Security Terminal           \x1b[1;31mBuild:\x1b[0m v8.4-2025  \x1b[1;31m║\x1b[0m"
     );
     term.writeln(
       "\x1b[1;31m║\x1b[0m  \x1b[1;31mOperator:\x1b[0m Tyler Limoges (TLimoges33)             \x1b[1;31mStatus:\x1b[0m ACTIVE   \x1b[1;31m║\x1b[0m"
@@ -785,7 +785,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     term.writeln("");
     term.writeln(
-      "\x1b[1;31m            T LIMOGES PORTFOLIO\x1b[0m - \x1b[1;31mDiabloRain Security Terminal\x1b[0m"
+      "\x1b[1;31m            T LIMOGES PORTFOLIO\x1b[0m - \x1b[1;31mT.Limoges Security Terminal\x1b[0m"
     );
     term.writeln(
       "\x1b[1;31m               Welcome back. Systems operational.\x1b[0m"
@@ -1841,7 +1841,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     },
     whoami: (term, args) => {
       term.writeln("> Executing ./get-bio.sh...\r\n");
-      term.writeln("Hello, I'm \x1b[1;31mTy Limoges\x1b[0m (DiabloRain).\r\n");
+      term.writeln("Hello, I'm \x1b[1;31mTy Limoges\x1b[0m (T.Limoges).\r\n");
       term.writeln(
         "I am a cybersecurity professional-in-training with a proven background in high-stakes incident response and critical infrastructure management. My current focus is \x1b[1;31mSyn_OS\x1b[0m, an experimental security-focused Linux distribution where I'm developing custom kernel schedulers and security automation at the systems level.\r\n"
       );
@@ -1984,7 +1984,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         "  \x1b[1;31m[CTF]\x1b[0m HackTheBox | TryHackMe | OverTheWire Wargames"
       );
       term.writeln(
-        "  \x1b[1;31m[CTF]\x1b[0m HackAPrompt (DiabloRain) - AI/LLM Security"
+        "  \x1b[1;31m[CTF]\x1b[0m HackAPrompt (T.Limoges) - AI/LLM Security"
       );
       term.writeln(
         "  \x1b[1;31m[STUDY]\x1b[0m freeCodeCamp - Full-stack & web security\r\n"
@@ -2010,7 +2010,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           { msg: "[ 0.000000] Initializing cgroup subsys cpuset", delay: 100 },
           { msg: "[ 0.000000] Initializing cgroup subsys cpu", delay: 100 },
           {
-            msg: "[ 0.000000] Linux version 6.1.0-syn (diablorain@synos)",
+            msg: "[ 0.000000] Linux version 6.1.0-syn (tlimoges@synos)",
             delay: 150,
           },
           {
@@ -2388,7 +2388,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         "  \x1b[1;31m[ACTIVE]\x1b[0m OverTheWire Wargames - Linux, networking, exploits"
       );
       term.writeln(
-        "  \x1b[1;31m[ACTIVE]\x1b[0m HackAPrompt (DiabloRain) - AI/LLM security challenges"
+        "  \x1b[1;31m[ACTIVE]\x1b[0m HackAPrompt (T.Limoges) - AI/LLM security challenges"
       );
       term.writeln(
         "  \x1b[1;31m[ACTIVE]\x1b[0m freeCodeCamp - Full-stack & web security\r\n"
@@ -3349,7 +3349,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             "\x1b[1;31m╔════════════════════════════════════════╗\x1b[0m"
           );
           term.writeln(
-            "\x1b[1;31m║   ACCESS GRANTED - DIABLORAIN MODE    ║\x1b[0m"
+            "\x1b[1;31m║   ACCESS GRANTED - TLIMOGES MODE    ║\x1b[0m"
           );
           term.writeln(
             "\x1b[1;31m╚════════════════════════════════════════╝\x1b[0m\r\n"

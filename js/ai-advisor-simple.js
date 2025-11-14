@@ -8,7 +8,7 @@ class AIAdvisor {
 
     // Portfolio context for AI
     this.portfolioContext = {
-      owner: 'Ty Limoges (DiabloRain)',
+      owner: 'Ty Limoges (T.Limoges)',
       role: 'Cybersecurity Student & Anesthesia Technician',
       currentGrade: 'B+ (83/100)',
       potentialGrade: 'A- (90/100)',

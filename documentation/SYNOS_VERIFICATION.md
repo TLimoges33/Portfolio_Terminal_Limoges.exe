@@ -88,7 +88,7 @@ C/C++ Files:               170 files
 Shell Scripts:             126 files
 Documentation:             565 markdown files
 Commits:                   310+ across 3 months
-Contributors:              4 (diablorain, TLimoges33, SynOS Developer, Syn_OS Developer)
+Contributors:              4 (tlimoges, TLimoges33, SynOS Developer, Syn_OS Developer)
 ```
 
 **Component Breakdown:**

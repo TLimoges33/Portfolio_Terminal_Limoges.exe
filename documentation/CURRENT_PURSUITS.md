@@ -72,7 +72,7 @@ Your portfolio now has a comprehensive **`pursuits`** command that showcases all
 - Networking fundamentals
 - Classic security challenges
 
-**HackAPrompt (DiabloRain):**
+**HackAPrompt (T.Limoges):**
 
 - AI/LLM security challenges
 - Prompt injection techniques
